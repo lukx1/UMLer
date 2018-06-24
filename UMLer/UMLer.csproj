@@ -45,14 +45,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ElementPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PaintableEventArgs.cs" />
+    <Compile Include="Controls\PaintableEventHandler.cs" />
+    <Compile Include="Diagram.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Paintables\CoreClass.cs" />
+    <Compile Include="Paintables\DragCore.cs" />
+    <Compile Include="Paintables\DraggableCoreClass.cs" />
+    <Compile Include="Paintables\Focus.cs" />
+    <Compile Include="Paintables\IDrag.cs" />
+    <Compile Include="Paintables\IPaintable.cs" />
+    <Compile Include="Paintables\LargeClass.cs" />
+    <Compile Include="Paintables\Link.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\ITool.cs" />
+    <Compile Include="Tools\Linker.cs" />
+    <Compile Include="Tools\Pointer.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -74,6 +94,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="System\Windows\Forms\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
