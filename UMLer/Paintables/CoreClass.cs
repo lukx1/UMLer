@@ -16,14 +16,17 @@ namespace UMLer.Paintables
     public abstract class CoreClass : IPaintable
     {
         private string _Name;
+        [Category("Info")]
         public string Name { get => _Name; set {
                 _Name = value;
                 RaisePropertyChanged("Name");
             } }
 
+        [ReadOnly(true)]
         public int ID { get; set; } = Diagram.GenerateID();
 
         private Point _Location;
+        [Category("Info")]
         public Point Location { get => _Location; set  
                 {
                 if(value == _Location)
@@ -35,6 +38,7 @@ namespace UMLer.Paintables
         }
 
         private Size _Size;
+        [Category("Info")]
         public Size Size { get => _Size; set {
                 _Size = value;
                 RaisePropertyChanged("Size");
@@ -42,6 +46,7 @@ namespace UMLer.Paintables
 
         private Color _PrimaryColor;
         [XmlElement(Type = typeof(XmlColor))]
+        [Category("Color")]
         public Color PrimaryColor { get => _PrimaryColor; set {
                 _PrimaryColor = value;
                 RaisePropertyChanged("Primary Color");
@@ -49,6 +54,7 @@ namespace UMLer.Paintables
 
         private Color _SecondaryColor;
         [XmlElement(Type = typeof(XmlColor))]
+        [Category("Color")]
         public Color SecondaryColor { get => _SecondaryColor; set {
                 _SecondaryColor = value;
                 RaisePropertyChanged("SecondaryColor");
@@ -56,6 +62,7 @@ namespace UMLer.Paintables
 
         private Color _BackgroundColor = Color.White;
         [XmlElement(Type = typeof(XmlColor))]
+        [Category("Color")]
         public Color BackgroundColor { get => _BackgroundColor; set {
                 _BackgroundColor = value;
                 RaisePropertyChanged("BackgroundColor");
@@ -63,6 +70,7 @@ namespace UMLer.Paintables
 
         private Font _Font;
         [XmlIgnore]
+        [Category("Misc")]
         public Font Font { get => _Font; set {
                 _Font = value;
                 RaisePropertyChanged("Font");
@@ -72,8 +80,11 @@ namespace UMLer.Paintables
         [XmlIgnore]
         public ElementPanel Parent { get; set; }
 
-        protected virtual Rectangle DisplayRectangle => new Rectangle(Location, Size); 
+        [Browsable(false)]
+        protected virtual Rectangle DisplayRectangle => new Rectangle(Location, Size);
+        [Category("Info")]
         public virtual int Width { get => Size.Width; set => Size = new Size(value,Size.Height); }
+        [Category("Info")]
         public virtual int Height { get => Size.Height; set => Size = new Size(Size.Width, value); }
 
         public virtual void Regenerate() { }

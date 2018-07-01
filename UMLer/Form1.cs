@@ -26,12 +26,6 @@ namespace UMLer
             ElementPanel.Paintables.Add(e2);
             ElementPanel.Paintables.Add(new Link(e1, e2));
             ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
-
-            Saver saver = new Saver()
-            {
-                PathToFile = @"C:\Out\UMLer.xml"
-            };
-            saver.SaveDiagram(diagram);
         }
 
         private void LoadBoot()

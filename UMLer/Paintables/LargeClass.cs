@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,11 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
+        [Category("Functional")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> Properties { get; set; } = new List<string>();
+        [Category("Functional")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> Methods { get; set; } = new List<string>();
 
 
@@ -39,7 +44,7 @@ namespace UMLer.Paintables
             headerRect = new Rectangle(
                 DisplayRectangle.X,
                 DisplayRectangle.Y,
-                DisplayRectangle.Width - 1,
+                DisplayRectangle.Width,
                 HEADER_MAX_HEIGHT - 1
                 );
 
@@ -52,13 +57,16 @@ namespace UMLer.Paintables
                 LineAlignment = StringAlignment.Center,
                 Trimming = StringTrimming.EllipsisCharacter,
             };
-
             gfx.DrawString(
                 Name,
                 SystemFonts.DefaultFont, //Font
                 Brushes.Black, // Color
-                (DisplayRectangle.X ) + DisplayRectangle.Width / 2, //X
-                (DisplayRectangle.Y ) + HEADER_MAX_HEIGHT / 2, //Y
+                new RectangleF(
+                    DisplayRectangle.X,
+                    DisplayRectangle.Y,
+                    DisplayRectangle.Width,
+                    HEADER_MAX_HEIGHT
+                    ),
                 stringFormat // Format
                 );
         }
@@ -118,7 +126,7 @@ namespace UMLer.Paintables
             propRect = new Rectangle(
                 DisplayRectangle.X,
                 DisplayRectangle.Y + headerRect.Height,
-                DisplayRectangle.Width - 1,
+                DisplayRectangle.Width,
                 GetPropsBoxHeight()
                 );
 
@@ -154,7 +162,7 @@ namespace UMLer.Paintables
             methodRect = new Rectangle(
                 DisplayRectangle.X,
                 DisplayRectangle.Y + headerRect.Height + propRect.Height,
-                DisplayRectangle.Width - 1,
+                DisplayRectangle.Width,
                 GetMethodsBoxHeight()
                 );
 
@@ -173,6 +181,12 @@ namespace UMLer.Paintables
         private void DrawOther(Graphics gfx)
         {
 
+        }
+
+        private void DrawBg(Graphics gfx)
+        {
+            gfx.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
+            //gfx.DrawRectangle(new Pen(PrimaryColor, 1), DisplayRectangle);
         }
 
         /// <summary>

@@ -12,7 +12,12 @@ namespace UMLer.Controls
     public class ElementPanel : Panel
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public HashSet<IPaintable> Paintables { get; set; } = new HashSet<IPaintable>();
+        private HashSet<IPaintable> _Paintables = new HashSet<IPaintable>();
+        public HashSet<IPaintable> Paintables { get => _Paintables; set
+            {
+                _Paintables = value;
+                RegenFocusObj();
+            } }
         public Focus FocusObj;
         private IPaintable _FocusedElement;
         public Diagram Diagram { get; set; }
@@ -34,6 +39,16 @@ namespace UMLer.Controls
             //TODO:Implement
         }
 
+        private void RegenFocusObj()
+        {
+            if (Paintables.OfType<Focus>().Count() != 0)
+            {
+                Paintables.RemoveWhere(r => r is Focus);
+            }
+            FocusObj = new Focus(this);
+            Paintables.Add(FocusObj);
+        }
+
         public ElementPanel()
         {
             this.SetStyle(
@@ -41,8 +56,7 @@ namespace UMLer.Controls
                 System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
                 System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
                 true);
-            FocusObj = new Focus(this);
-            Paintables.Add(FocusObj);
+            RegenFocusObj();
             FocusChanged += FocusRefresher;
         }
 
