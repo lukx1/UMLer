@@ -27,13 +27,23 @@ namespace UMLer.Paintables
                 DraggingStarted(this, e);
         }
 
-        public DraggableCoreClass(ElementPanel Parent) : base(Parent)
+        public DraggableCoreClass() : base()
+        {
+            Init();
+        }
+
+        private void Init()
         {
             this.Name = "Draggable Class";
             DragCore = new DragCore(this);
-            
+
             DragCore.DraggingStarted += DraggingStarted;
             DragCore.DraggingStopped += DraggingStopped;
+        }
+
+        public DraggableCoreClass(ElementPanel Parent) : base(Parent)
+        {
+            Init();
         }
 
        

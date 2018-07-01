@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace UMLer.Controls
 {
     public class ElementPanel : Panel
     {
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HashSet<IPaintable> Paintables { get; set; } = new HashSet<IPaintable>();
         public Focus FocusObj;
         private IPaintable _FocusedElement;
@@ -24,7 +26,7 @@ namespace UMLer.Controls
 
         public void BindDiagram(Diagram diagram)
         {
-
+            this.Diagram = diagram;
         }
 
         public void PaintablesLoseFocus()
@@ -46,7 +48,14 @@ namespace UMLer.Controls
 
         private void FocusRefresher(object sender, PaintableEventArgs args)
         {
-            FocusObj.FocusAround = args.IPaintable;
+            if (args.IPaintable is ILink)
+            {
+                FocusObj.FocusAround = null;
+            }
+            else
+            {
+                FocusObj.FocusAround = args.IPaintable;
+            }
             this.Invalidate();
             //throw new NotImplementedException();
         }
@@ -67,6 +76,11 @@ namespace UMLer.Controls
                     "Diagram has not been set." +
                     " Its tool can't be used"
                     );
+            }
+
+            if (Diagram.SelectedTool == null)
+            {
+                return;
             }
 
             if(paintable != null)

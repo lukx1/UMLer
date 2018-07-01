@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UMLer.Controls;
+using UMLer.Special;
 
 namespace UMLer.Paintables
 {
+    [NoSerialize]
     public class Focus : CoreClass
     {
         private IPaintable _FocusAround { get; set; }
@@ -17,8 +19,8 @@ namespace UMLer.Paintables
                 FocusAroundChanged();
             }
         }
-        public int DistanceFromBox = 10;
-        public Pen Pen = new Pen(Brushes.Black) { DashPattern = new float[] { 4f, 2f } };
+        public int DistanceFromBox = Diagram.FocusDistanceFromBox;
+        public Pen Pen = new Pen(Brushes.Black) { DashPattern = Diagram.FocusDashPattern };
 
         public Focus(ElementPanel panel) : base(panel)
         {

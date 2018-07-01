@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -18,9 +19,11 @@ namespace UMLer.Paintables
         int Height { get; set; }
         Color PrimaryColor { get; set; }
         Color SecondaryColor { get; set; }
+        Color BackgroundColor { get; set; }       
         ElementPanel Parent { get; set; }
-        
+        int ID { get; set; }
 
+        event PropertyChangedEventHandler PropertyChanged;
         event EventHandler LocationChanged;
         event MouseEventHandler Clicked;
         event MouseEventHandler MouseUp;
@@ -32,12 +35,12 @@ namespace UMLer.Paintables
         void RaiseMouseMove(MouseEventArgs a);
         void RaiseMouseUp(MouseEventArgs a);
         void RaiseMouseDown(MouseEventArgs a);
-        
-
 
         bool Contains(Point p);
         
         void Paint(Graphics g);
+
+        void Regenerate();
 
         void Focus();
         bool IsFocused();

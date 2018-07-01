@@ -12,75 +12,106 @@ using UMLer.Special;
 
 namespace UMLer.Paintables
 {
-    [Serializable]
-    public abstract class CoreClass : IPaintable
+    public abstract class LinkCore : IPaintable
     {
         private string _Name;
-        public string Name { get => _Name; set {
+        public string Name
+        {
+            get => _Name; set
+            {
                 _Name = value;
-                RaisePropertyChanged("Name");
-            } }
+                RaisePropertyChanged("Name",false);
+            }
+        }
 
         public int ID { get; set; } = Diagram.GenerateID();
 
         private Point _Location;
-        public Point Location { get => _Location; set  
-                {
-                if(value == _Location)
+        [ReadOnly(true)]
+        public Point Location
+        {
+            get => _Location; set
+            {
+                if (value == _Location)
                     return;
                 _Location = value;
                 RaisePropertyChanged("Location");
                 LocationChanged?.Invoke(this, new EventArgs());
-                }
+            }
         }
 
         private Size _Size;
-        public Size Size { get => _Size; set {
+        [ReadOnly(true)]
+        public Size Size
+        {
+            get => _Size; set
+            {
                 _Size = value;
                 RaisePropertyChanged("Size");
-            } }
+            }
+        }
 
         private Color _PrimaryColor;
         [XmlElement(Type = typeof(XmlColor))]
-        public Color PrimaryColor { get => _PrimaryColor; set {
+        public virtual Color PrimaryColor
+        {
+            get => _PrimaryColor; set
+            {
                 _PrimaryColor = value;
-                RaisePropertyChanged("Primary Color");
-            } }
+                RaisePropertyChanged("PrimaryColor");
+            }
+        }
 
         private Color _SecondaryColor;
-        [XmlElement(Type = typeof(XmlColor))]
-        public Color SecondaryColor { get => _SecondaryColor; set {
+        [XmlIgnore]
+        [Browsable(false)]
+        public Color SecondaryColor
+        {
+            get => _SecondaryColor; set
+            {
                 _SecondaryColor = value;
                 RaisePropertyChanged("SecondaryColor");
-            } }
+            }
+        }
 
         private Color _BackgroundColor = Color.White;
-        [XmlElement(Type = typeof(XmlColor))]
-        public Color BackgroundColor { get => _BackgroundColor; set {
+        [XmlIgnore]
+        [Browsable(false)]
+        public Color BackgroundColor
+        {
+            get => _BackgroundColor; set
+            {
                 _BackgroundColor = value;
                 RaisePropertyChanged("BackgroundColor");
-            } } 
+            }
+        }
 
         private Font _Font;
+        [Browsable(false)]
         [XmlIgnore]
-        public Font Font { get => _Font; set {
+        public Font Font
+        {
+            get => _Font; set
+            {
                 _Font = value;
                 RaisePropertyChanged("Font");
-            } }
+            }
+        }
 
-        [BrowsableAttribute(false)]
+        [Browsable(false)]
         [XmlIgnore]
         public ElementPanel Parent { get; set; }
 
-        protected virtual Rectangle DisplayRectangle => new Rectangle(Location, Size); 
-        public virtual int Width { get => Size.Width; set => Size = new Size(value,Size.Height); }
+        [Browsable(false)]
+        protected virtual Rectangle DisplayRectangle => new Rectangle(Location, Size);
+        [Browsable(false)]
+        public virtual int Width { get => Size.Width; set => Size = new Size(value, Size.Height); }
+        [Browsable(false)]
         public virtual int Height { get => Size.Height; set => Size = new Size(Size.Width, value); }
 
-        public virtual void Regenerate() { }
+        public bool IsFocused() => this == Parent.FocusedElement;
 
-        public bool IsFocused() => this == Parent.FocusedElement; 
-
-        private void RaisePropertyChanged(string propName,bool invalidate = true)
+        protected virtual void RaisePropertyChanged(string propName, bool invalidate = true)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
             if (invalidate)
@@ -94,30 +125,42 @@ namespace UMLer.Paintables
             return new Rectangle(Location, Size).Contains(p);
         }
 
+        public virtual void Regenerate()
+        {
+
+        }
+
         public void Focus()
         {
             Parent.Focus(this);
         }
 
-        public CoreClass()
+        public LinkCore()
         {
             Name = "Class";
             Location = new Point(0, 0);
             Size = new Size(100, 100);
-            PrimaryColor = Color.Black;
-            SecondaryColor = Color.Cyan;
             Font = SystemFonts.DefaultFont;
+            this.Parent = Parent;
+
         }
 
-        public CoreClass(ElementPanel Parent) : this()
+        public LinkCore(ElementPanel Parent)
         {
-            this.Parent = Parent;         
+            Name = "Class";
+            //Location = new Point(0, 0);
+            //Size = new Size(100, 100);
+            //Font = SystemFonts.DefaultFont;
+            this.Parent = Parent;
+
         }
 
         public virtual void RaiseClicked(MouseEventArgs a)
         {
             Clicked?.Invoke(this, a);
         }
+
+
 
         public virtual void RaiseMouseMove(MouseEventArgs a)
         {
@@ -143,6 +186,5 @@ namespace UMLer.Paintables
 
         public abstract void Paint(Graphics g);
 
-        
     }
 }

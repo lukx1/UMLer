@@ -24,8 +24,8 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
-        public IEnumerable<string> Properties { get; set; } = Enumerable.Empty<string>();
-        public IEnumerable<string> Methods { get; set; } = Enumerable.Empty<string>();
+        public List<string> Properties { get; set; } = new List<string>();
+        public List<string> Methods { get; set; } = new List<string>();
 
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace UMLer.Paintables
                 GetPropsBoxHeight()
                 );
 
-            gfx.FillRectangle(new SolidBrush(Color.White), propRect);
+            gfx.FillRectangle(new SolidBrush(BackgroundColor), propRect);
             gfx.DrawRectangle(new Pen(PrimaryColor), propRect);
 
             FillRectangleWithText(gfx, propRect, Properties);
@@ -158,7 +158,7 @@ namespace UMLer.Paintables
                 GetMethodsBoxHeight()
                 );
 
-            gfx.FillRectangle(new SolidBrush(Color.White), methodRect);
+            gfx.FillRectangle(new SolidBrush(BackgroundColor), methodRect);
             gfx.DrawRectangle(new Pen(PrimaryColor), methodRect);
 
             DrawMethodsPropsSeparatorLine(gfx);
@@ -187,10 +187,19 @@ namespace UMLer.Paintables
             DrawOther(gfx);
         }
 
+        private void Init()
+        {
+            this.MouseUp += (object o, MouseEventArgs a) => this.Focus();//TODO:Probably not needed
+        }
+
+        public LargeClass() : base()
+        {
+            Init();  
+        }
 
         public LargeClass(ElementPanel Parent) : base(Parent)
         {
-            this.MouseUp += (object o, MouseEventArgs a) => this.Focus();
+            Init();
         }
     }
 }

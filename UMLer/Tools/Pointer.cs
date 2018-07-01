@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UMLer.Controls;
 using UMLer.Paintables;
 
 namespace UMLer.Tools
@@ -14,14 +15,17 @@ namespace UMLer.Tools
 
         public string Description => "Used for selecting elements";
 
+        public event PaintMouseHandler ClickedUsingTool;
+
         public void Clicked(MouseEventArgs args)
         {
-
+            ClickedUsingTool?.Invoke(this, new PaintMouseArgs(args));
         }
 
         public void ClickedOnPaintable(MouseEventArgs a, IPaintable paintable)
         {
             paintable.Focus();
+            ClickedUsingTool?.Invoke(this, new PaintMouseArgs(a,paintable));
         }
     }
 }
