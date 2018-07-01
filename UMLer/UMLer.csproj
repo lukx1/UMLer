@@ -48,12 +48,7 @@
     <Compile Include="Controls\ElementPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\InvisTextBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\InvisTextBox.Designer.cs">
-      <DependentUpon>InvisTextBox.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\InnerTextBox.cs" />
     <Compile Include="Controls\PaintableEventArgs.cs" />
     <Compile Include="Controls\PaintableEventHandler.cs" />
     <Compile Include="Controls\Paintables\InnerTextBox.cs" />
@@ -86,6 +81,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Special\CanBeNull.cs" />
+    <Compile Include="Special\CsvConverter.cs" />
     <Compile Include="Special\IncludeInToolBoxAttribute.cs" />
     <Compile Include="Special\IPantable.cs" />
     <Compile Include="Special\LinkMath.cs" />

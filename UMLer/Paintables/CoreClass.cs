@@ -91,7 +91,7 @@ namespace UMLer.Paintables
 
         public bool IsFocused() => this == Parent.FocusedElement; 
 
-        private void RaisePropertyChanged(string propName,bool invalidate = true)
+        protected virtual void RaisePropertyChanged(string propName,bool invalidate = true)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
             if (invalidate)

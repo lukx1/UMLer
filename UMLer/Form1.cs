@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UMLer.Controls;
 using UMLer.Loading;
 using UMLer.Paintables;
 using UMLer.Tools;
@@ -53,6 +54,7 @@ namespace UMLer
             InitializeComponent();
             Init();
             TestBoot();
+            //this.Controls.Add(new InvisTextBox() {Location = new Point(200,200),Size = new Size(100,10) });
             //LoadBoot();
             
         }

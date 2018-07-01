@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UMLer.Controls;
+using UMLer.Special;
 
 namespace UMLer.Paintables
 {
@@ -25,14 +26,28 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
-        private InvisTextBox headerTextBox;
+        //private InvisTextBox headerTextBox;
 
         [Category("Functional")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public List<string> Properties { get; set; } = new List<string>();
+        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
+        "System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+       typeof(System.Drawing.Design.UITypeEditor))]
+        [TypeConverter(typeof(CsvConverter))]
+        public List<string> Properties { get => _Properties; set {
+                _Properties = value;
+                RaisePropertyChanged("Properties");
+            } }
+        private List<string> _Properties = new List<string>();
         [Category("Functional")]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public List<string> Methods { get; set; } = new List<string>();
+        [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
+        "System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+       typeof(System.Drawing.Design.UITypeEditor))]
+        [TypeConverter(typeof(CsvConverter))]
+        public List<string> Methods { get => _Methods; set {
+                _Methods = value;
+                RaisePropertyChanged("Methods");
+            } }
+        private List<string> _Methods = new List<string>();
 
 
         /// <summary>
@@ -60,7 +75,7 @@ namespace UMLer.Paintables
                 Trimming = StringTrimming.EllipsisCharacter,
             };
 
-            /*gfx.DrawString(
+            gfx.DrawString(
                 Name,
                 SystemFonts.DefaultFont, //Font
                 Brushes.Black, // Color
@@ -71,7 +86,7 @@ namespace UMLer.Paintables
                     HEADER_MAX_HEIGHT
                     ),
                 stringFormat // Format
-                );*/
+                );
         }
 
         /// <summary>
@@ -202,25 +217,20 @@ namespace UMLer.Paintables
             DrawProps(gfx);
             DrawMethods(gfx);
             DrawOther(gfx);
-            headerTextBox.Invalidate();
-            headerTextBox.Location = new Point(Location.X, Location.Y);
+            Resize();
+            //headerTextBox.Invalidate();
+            //headerTextBox.Location = new Point(Location.X, Location.Y);
+        }
+
+        private void Resize()
+        {
+            var newsize = new Size(DisplayRectangle.Width, headerRect.Height + propRect.Height + methodRect.Height);
+            if (Size != newsize)
+                Size = newsize;
         }
 
         private void Init()
         {
-            this.MouseUp += (object o, MouseEventArgs a) => this.Focus();//TODO:Probably not needed
-            headerTextBox = new InvisTextBox
-            {
-                Location = new Point(Location.X, Location.Y),
-                Size = new Size(DisplayRectangle.Width, HEADER_MAX_HEIGHT)
-            };
-            Parent.Controls.Add(headerTextBox);
-            /*new RectangleF(
-                    DisplayRectangle.X,
-                    DisplayRectangle.Y,
-                    DisplayRectangle.Width,
-                    HEADER_MAX_HEIGHT
-                    )*/
         }
 
         public LargeClass() : base()
