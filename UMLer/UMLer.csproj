@@ -48,8 +48,15 @@
     <Compile Include="Controls\ElementPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\InvisTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\InvisTextBox.Designer.cs">
+      <DependentUpon>InvisTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PaintableEventArgs.cs" />
     <Compile Include="Controls\PaintableEventHandler.cs" />
+    <Compile Include="Controls\Paintables\InnerTextBox.cs" />
     <Compile Include="Controls\PaintMouseArgs.cs" />
     <Compile Include="Controls\PaintMouseHandler.cs" />
     <Compile Include="Diagram.cs" />

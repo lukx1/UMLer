@@ -25,6 +25,8 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
+        private InvisTextBox headerTextBox;
+
         [Category("Functional")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<string> Properties { get; set; } = new List<string>();
@@ -57,7 +59,8 @@ namespace UMLer.Paintables
                 LineAlignment = StringAlignment.Center,
                 Trimming = StringTrimming.EllipsisCharacter,
             };
-            gfx.DrawString(
+
+            /*gfx.DrawString(
                 Name,
                 SystemFonts.DefaultFont, //Font
                 Brushes.Black, // Color
@@ -68,7 +71,7 @@ namespace UMLer.Paintables
                     HEADER_MAX_HEIGHT
                     ),
                 stringFormat // Format
-                );
+                );*/
         }
 
         /// <summary>
@@ -199,11 +202,25 @@ namespace UMLer.Paintables
             DrawProps(gfx);
             DrawMethods(gfx);
             DrawOther(gfx);
+            headerTextBox.Invalidate();
+            headerTextBox.Location = new Point(Location.X, Location.Y);
         }
 
         private void Init()
         {
             this.MouseUp += (object o, MouseEventArgs a) => this.Focus();//TODO:Probably not needed
+            headerTextBox = new InvisTextBox
+            {
+                Location = new Point(Location.X, Location.Y),
+                Size = new Size(DisplayRectangle.Width, HEADER_MAX_HEIGHT)
+            };
+            Parent.Controls.Add(headerTextBox);
+            /*new RectangleF(
+                    DisplayRectangle.X,
+                    DisplayRectangle.Y,
+                    DisplayRectangle.Width,
+                    HEADER_MAX_HEIGHT
+                    )*/
         }
 
         public LargeClass() : base()
