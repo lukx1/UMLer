@@ -13,6 +13,7 @@ namespace UMLer.Paintables.LinkPainters
     {
         public Link Link { get; set; }
         public BendStyle BendStyle { get; set; } = BendStyle.DIRECT;
+        public LinkType LinkType { get; set; } = LinkType.NONE;
         public IPaintable Supervisor { get; set; }
         public IPaintable Start { get; set; }
         public IPaintable Finish { get; set; }
@@ -21,6 +22,7 @@ namespace UMLer.Paintables.LinkPainters
         public float LineWidth { get; set; } = 1f;
         public float[] DashPattern { get; set; } = Diagram.FocusDashPattern;
         public Color LinkColor { get; set; } = Color.Black;
+
 
         public LinkPainterBuilder()
         {
@@ -42,6 +44,8 @@ namespace UMLer.Paintables.LinkPainters
                 throw new InvalidOperationException("Start can't be finish");
             if (Supervisor.Parent == null)
                 throw new NullReferenceException("Supervisor must have a parent");
+            if (!(Supervisor is Link))
+                throw new InvalidOperationException("Supervisor must be link");
         }
 
         private ILinkPainter CreatePainter(Link link)
@@ -52,6 +56,8 @@ namespace UMLer.Paintables.LinkPainters
                 default:
                 case BendStyle.DIRECT:
                     return new DirectLinker<Link>(link);
+                case BendStyle.FORTY_FIVE:
+                    return new FortyLinker<Link>(link);
                     //case BendStyle.FORTY_FIVE:
                     //   break;
             }

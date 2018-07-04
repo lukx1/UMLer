@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace UMLer.Controls
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private HashSet<IPaintable> _Paintables = new HashSet<IPaintable>();
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public HashSet<IPaintable> Paintables { get => _Paintables; set
             {
                 _Paintables = value;
@@ -139,7 +141,7 @@ namespace UMLer.Controls
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            base.OnMouseUp(e);
+            base.OnMouseDown(e);
             foreach (var paintable in Paintables)
             {
                 if (paintable.Contains(e.Location))
@@ -148,6 +150,19 @@ namespace UMLer.Controls
                     break;
                 }
             }
+        }
+
+        public Bitmap CreateBitmap()
+        {
+            var bitmap = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
+            this.DrawToBitmap(bitmap, new Rectangle(0, 0, ClientRectangle.Width, ClientRectangle.Height));
+            return bitmap;
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+            FocusedElement?.RaiseKeyPressed(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
@@ -163,6 +178,17 @@ namespace UMLer.Controls
             }
         }
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            FocusedElement?.RaiseKeyUp(e);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            FocusedElement?.RaiseKeyDown(e);
+        }
 
         private void HandleIPaintable(IPaintable paintable)
         {

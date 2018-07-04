@@ -27,6 +27,9 @@ namespace UMLer.Paintables.LinkPainters
                 }
             } }
 
+        public abstract Point ConnectionStart { get; set; }
+        public abstract Point ConnectionFinish { get; set; }
+
         private static Pen CreateOutlinePen()
         {
             return new Pen(new SolidBrush(Color.Black), 1f)

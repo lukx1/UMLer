@@ -89,7 +89,10 @@ namespace UMLer.Paintables
 
         public virtual void Regenerate() { }
 
-        public bool IsFocused() => this == Parent.FocusedElement; 
+        public bool IsFocused() => this == Parent.FocusedElement;
+
+        protected List<Special.InnerTextBox> TextBoxes = new List<Special.InnerTextBox>();
+        protected Special.InnerTextBox FocusedTextBox = null;
 
         protected virtual void RaisePropertyChanged(string propName,bool invalidate = true)
         {
@@ -128,6 +131,10 @@ namespace UMLer.Paintables
         public virtual void RaiseClicked(MouseEventArgs a)
         {
             Clicked?.Invoke(this, a);
+            foreach (var textBox in TextBoxes)
+            {
+                textBox.Contains(a.Location);
+            }
         }
 
         public virtual void RaiseMouseMove(MouseEventArgs a)
@@ -151,9 +158,31 @@ namespace UMLer.Paintables
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseDown;
         public event PropertyChangedEventHandler PropertyChanged;
+        public event KeyEventHandler KeyUp;
+        public event KeyEventHandler KeyDown;
+        public event KeyPressEventHandler KeyPressed;
 
-        public abstract void Paint(Graphics g);
+        public virtual void Paint(Graphics g)
+        {
+            foreach (var textb in TextBoxes)
+            {
+                textb.Paint(g);
+            }
+        }
 
-        
+        public void RaiseKeyDown(KeyEventArgs a)
+        {
+            KeyDown?.Invoke(this,a);
+        }
+
+        public void RaiseKeyUp(KeyEventArgs a)
+        {
+            KeyUp?.Invoke(this, a);
+        }
+
+        public void RaiseKeyPressed(KeyPressEventArgs a)
+        {
+            KeyPressed?.Invoke(this, a);
+        }
     }
 }

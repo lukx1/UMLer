@@ -67,6 +67,7 @@ namespace UMLer
         public static float[] FocusDashPattern => new float[] { 4f, 2f };
         public static readonly int FocusDistanceFromBox = 10;
         public static readonly float FocusPenWidthMultiplier = 4f;
+        public static readonly float PenDefaultWidth = 2f;
 
         public Diagram()
         {

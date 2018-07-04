@@ -51,7 +51,7 @@ namespace UMLer.Paintables
             }
         }
 
-        private Color _PrimaryColor;
+        private Color _PrimaryColor = Color.Black;
         [XmlElement(Type = typeof(XmlColor))]
         public virtual Color PrimaryColor
         {
@@ -183,8 +183,25 @@ namespace UMLer.Paintables
         public event MouseEventHandler MouseUp;
         public event MouseEventHandler MouseDown;
         public event PropertyChangedEventHandler PropertyChanged;
+        public event KeyEventHandler KeyUp;
+        public event KeyEventHandler KeyDown;
+        public event KeyPressEventHandler KeyPressed;
 
         public abstract void Paint(Graphics g);
 
+        public void RaiseKeyDown(KeyEventArgs a)
+        {
+            KeyDown?.Invoke(this, a);
+        }
+
+        public void RaiseKeyUp(KeyEventArgs a)
+        {
+            KeyUp?.Invoke(this, a);
+        }
+
+        public void RaiseKeyPressed(KeyPressEventArgs a)
+        {
+            KeyPressed?.Invoke(this, a);
+        }
     }
 }

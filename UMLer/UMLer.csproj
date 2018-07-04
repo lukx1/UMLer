@@ -48,7 +48,6 @@
     <Compile Include="Controls\ElementPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\InnerTextBox.cs" />
     <Compile Include="Controls\PaintableEventArgs.cs" />
     <Compile Include="Controls\PaintableEventHandler.cs" />
     <Compile Include="Controls\Paintables\InnerTextBox.cs" />
@@ -72,20 +71,27 @@
     <Compile Include="Paintables\LargeClass.cs" />
     <Compile Include="Paintables\Link.cs" />
     <Compile Include="Paintables\LinkCore.cs" />
+    <Compile Include="Paintables\LinkPainters\ArrowMaker.cs" />
     <Compile Include="Paintables\LinkPainters\BendStyle.cs" />
     <Compile Include="Paintables\LinkPainters\CoreLinkPainter.cs" />
+    <Compile Include="Paintables\LinkPainters\Direction.cs" />
     <Compile Include="Paintables\LinkPainters\DirectLinker.cs" />
+    <Compile Include="Paintables\LinkPainters\FortyLinker.cs" />
     <Compile Include="Paintables\LinkPainters\ILinkPainter.cs" />
     <Compile Include="Paintables\LinkPainters\LinkPainterBuilder.cs" />
+    <Compile Include="Paintables\LinkPainters\LinkType.cs" />
+    <Compile Include="Paintables\LinkPainters\PenMaker.cs" />
     <Compile Include="Paintables\SimpleClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Special\CanBeNull.cs" />
     <Compile Include="Special\CsvConverter.cs" />
     <Compile Include="Special\IncludeInToolBoxAttribute.cs" />
+    <Compile Include="Special\InnerTextBox.cs" />
     <Compile Include="Special\IPantable.cs" />
     <Compile Include="Special\LinkMath.cs" />
     <Compile Include="Special\NoSerializeAttribute.cs" />
+    <Compile Include="Special\StatArrow.cs" />
     <Compile Include="Special\XmlColor.cs" />
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\Linker.cs" />

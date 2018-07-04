@@ -17,6 +17,9 @@ namespace UMLer.Paintables.LinkPainters
         Pen Pen { get; set; }
         Pen FocusOutlinePen { get; set; }
         IPaintable Supervisor { get; set; }
+        Point ConnectionStart { get; set; }
+        Point ConnectionFinish { get; set; }
+
 
         bool Contains(Point p);
         void Paint(Graphics g);

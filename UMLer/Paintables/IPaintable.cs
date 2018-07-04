@@ -29,8 +29,13 @@ namespace UMLer.Paintables
         event MouseEventHandler MouseUp;
         event MouseEventHandler MouseDown;
         event MouseEventHandler MouseMove;
-        
+        event KeyEventHandler KeyUp;
+        event KeyEventHandler KeyDown;
+        event KeyPressEventHandler KeyPressed;
 
+        void RaiseKeyDown(KeyEventArgs a);
+        void RaiseKeyUp(KeyEventArgs a);
+        void RaiseKeyPressed(KeyPressEventArgs a);
         void RaiseClicked(MouseEventArgs a);
         void RaiseMouseMove(MouseEventArgs a);
         void RaiseMouseUp(MouseEventArgs a);

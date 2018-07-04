@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,6 +30,7 @@ namespace UMLer
             ElementPanel.Paintables.Add(e2);
             ElementPanel.Paintables.Add(new Link(e1, e2));
             ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
+            //ElementPanel.Controls.Add(new InvisTextBox() {Location = new Point(400,400),Size = new Size(20,13) });
         }
 
         private void LoadBoot()
@@ -92,6 +96,46 @@ namespace UMLer
             var r = saver.LoadDiagram();
             saver.LinkPaintables(r, diagram);
             diagram.ElementPanel.Paintables = r;
+        }
+
+        private ImageFormat ParseImageFormat(string ext)
+        {
+            switch (ext)
+            {
+                case "BMP":
+                    return ImageFormat.Bmp;
+                case "GIF":
+                    return ImageFormat.Gif;
+                default:
+                case "JPEG":
+                    return ImageFormat.Jpeg;
+                case "PNG":
+                    return ImageFormat.Png;
+                case "TIFF":
+                    return ImageFormat.Tiff;
+                case "WMF":
+                    return ImageFormat.Wmf;
+            }
+        }
+
+        private void labelSSave_Click(object sender, EventArgs e)
+        {
+            var bitmap = ElementPanel.CreateBitmap();
+            SaveFileDialog sf = new SaveFileDialog
+            {
+                Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"
+            };
+            sf.ShowDialog();
+            
+            var path = sf.FileName;
+            try
+            {
+                bitmap.Save(path, ParseImageFormat(Path.GetExtension(path).ToUpper()));
+            }
+            catch (ExternalException ex)
+            {
+                MessageBox.Show("Error " + ex.ToString());
+            }
         }
     }
 }

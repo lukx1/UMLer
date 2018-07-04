@@ -12,5 +12,7 @@ namespace UMLer.Paintables
         int StartID { get; set; }
         IPaintable Finish { get; set; }
         int FinishID { get; set; }
+        double AngleStart { get; set; }
+        double AngleFinish { get; set; }
     }
 }

@@ -8,19 +8,21 @@ using UMLer.Special;
 
 namespace UMLer.Paintables.LinkPainters
 {
-    public class DirectLinker<T>  : CoreLinkPainter where T : ILink, IPaintable
+    public class FortyLinker<T> : CoreLinkPainter where T : ILink, IPaintable
     {
         public override Point ConnectionStart { get; set; }
         public override Point ConnectionFinish { get; set; }
         private const double LineSwapThreshold = 20;
+        private Point midPointS;
+        private Point midPointF;
 
-        public static DirectLinker<T1> CreateDefault<T1>(T1 link) where T1:ILink,IPaintable
+        public static DirectLinker<T1> CreateDefault<T1>(T1 link) where T1 : ILink, IPaintable
         {
             var linker = new DirectLinker<T1>(link);
             return linker;
         }
 
-        public DirectLinker() : base()
+        public FortyLinker() : base()
         {
             FocusOutlinePen = new Pen(new SolidBrush(Color.Black), LineWidth * Diagram.FocusPenWidthMultiplier);
         }
@@ -34,14 +36,14 @@ namespace UMLer.Paintables.LinkPainters
             CalculateLine();
         }
 
-        public DirectLinker(T link,IPaintable Start,IPaintable Finish) : base(Start,Finish,link)
+        public FortyLinker(T link, IPaintable Start, IPaintable Finish) : base(Start,Finish,link)
         {
             this.Start = Start;
             this.Finish = Finish;
             Init();
         }
 
-        public DirectLinker(T link) : base(link.Start, link.Finish, link) 
+        public FortyLinker(T link) : base(link.Start, link.Finish, link) 
         {
             this.Start = Start;
             this.Finish = Finish;
@@ -53,6 +55,8 @@ namespace UMLer.Paintables.LinkPainters
             var conPoints = FindClosestPointsOnSides();
             ConnectionStart = conPoints[0];
             ConnectionFinish = conPoints[1];
+            midPointS = new Point(ConnectionStart.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
+            midPointF = new Point(ConnectionFinish.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
         }
 
         private void Supervisor_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -66,14 +70,34 @@ namespace UMLer.Paintables.LinkPainters
             return ConnectionFinish != null && ConnectionStart != null;
         }
 
+        private void SetAngles(Point bestPtA, Point bestPtB, Point[] Points)
+        {
+            for (int i = 0; i < Points.Length; i++)
+            {
+                if (Points[i] == bestPtA)
+                {
+                    ((ILink)Supervisor).AngleStart = i * (Math.PI / 2);
+                }
+                if (Points[i] == bestPtB)
+                {
+                    ((ILink)Supervisor).AngleFinish = (i % 4) * (Math.PI / 2);
+                }
+            }
+        }
+
         public override bool Contains(Point p)
         {
             if (!AreConPointsValid())
                 return false;
 
             var closest = new Point();
-            var distance = LinkMath.FindDistanceToSegment(p, ConnectionStart, ConnectionFinish, out closest);
-            return distance <= Diagram.DistFromLinkClickAccept;
+            var distance1 = LinkMath.FindDistanceToSegment(p, ConnectionStart, midPointS, out closest);
+            var distance2 = LinkMath.FindDistanceToSegment(p, midPointS, midPointF, out closest);
+            var distance3 = LinkMath.FindDistanceToSegment(p, midPointF, ConnectionFinish, out closest);
+            return 
+                distance1 <= Diagram.DistFromLinkClickAccept ||
+                distance2 <= Diagram.DistFromLinkClickAccept ||
+                distance3 <= Diagram.DistFromLinkClickAccept;
         }
 
         public override bool IsFocused()
@@ -100,10 +124,10 @@ namespace UMLer.Paintables.LinkPainters
                 var w = paintable.Width;
                 var h = paintable.Height;
                 var n = ((mathI % 3) + mathI / 3);
-                var m = (mathI + 1) % 2 + (mathI / 3)*2;
+                var m = (mathI + 1) % 2 + (mathI / 3) * 2;
                 pts[i] = new Point(
-                    (int)(x+ w * (n/2.0)),
-                    (int)(y + h * (m/2.0))
+                    (int)(x + w * (n / 2.0)),
+                    (int)(y + h * (m / 2.0))
                     );
             }
 
@@ -117,8 +141,8 @@ namespace UMLer.Paintables.LinkPainters
                 for (int y = 0; y < 4; y++)
                 {
                     var endPt = pts[4 + y];
-                    var dist = Distance(startPt,endPt);
-                    if(dist < bestDist)
+                    var dist = Distance(startPt, endPt);
+                    if (dist < bestDist)
                     {
                         bestDist = dist;
                         bestPtA = startPt;
@@ -130,24 +154,9 @@ namespace UMLer.Paintables.LinkPainters
             return new Point[2] { bestPtA, bestPtB };
         }
 
-        private void SetAngles(Point bestPtA,Point bestPtB,Point[] Points)
-        {
-            for (int i = 0; i < Points.Length; i++)
-            {
-                if(Points[i] == bestPtA)
-                {
-                    ((ILink)Supervisor).AngleStart = i * (Math.PI/2);
-                }
-                if(Points[i] == bestPtB)
-                {
-                    ((ILink)Supervisor).AngleFinish = (i%4) * (Math.PI / 2);
-                }
-            }
-        }
-
         private double Distance(Point a, Point b)
         {
-            return Math.Sqrt((a.X-b.X)* (a.X - b.X) + (a.Y-b.Y)* (a.Y - b.Y));
+            return Math.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
         }
 
         public override void Paint(Graphics g)
@@ -163,8 +172,15 @@ namespace UMLer.Paintables.LinkPainters
                     Pen.Width *= Diagram.FocusPenWidthMultiplier;
                     focused = true;
                 }
-
-                g.DrawLine(Pen, ConnectionStart, ConnectionFinish);
+                
+                g.DrawLines(
+                    Pen,
+                    new Point[] {
+                        ConnectionStart,
+                        midPointS,
+                        midPointF,
+                        ConnectionFinish
+                    });
 
                 if (focused)
                 {

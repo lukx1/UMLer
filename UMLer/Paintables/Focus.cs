@@ -10,6 +10,7 @@ using UMLer.Special;
 namespace UMLer.Paintables
 {
     [NoSerialize]
+    [Serializable]
     public class Focus : CoreClass
     {
         private IPaintable _FocusAround { get; set; }

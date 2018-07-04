@@ -26,7 +26,9 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
-        //private InvisTextBox headerTextBox;
+        private InnerTextBox HeaderTextBox;
+        private List<InnerTextBox> PropertiesTextBoxes = new List<InnerTextBox>();
+        private List<InnerTextBox> MethodsTextBoxes = new List<InnerTextBox>();
 
         [Category("Functional")]
         [Editor(@"System.Windows.Forms.Design.StringCollectionEditor," +
@@ -218,8 +220,7 @@ namespace UMLer.Paintables
             DrawMethods(gfx);
             DrawOther(gfx);
             Resize();
-            //headerTextBox.Invalidate();
-            //headerTextBox.Location = new Point(Location.X, Location.Y);
+            base.Paint(gfx);
         }
 
         private void Resize()
@@ -231,6 +232,7 @@ namespace UMLer.Paintables
 
         private void Init()
         {
+            
         }
 
         public LargeClass() : base()

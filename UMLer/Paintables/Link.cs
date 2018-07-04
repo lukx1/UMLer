@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UMLer.Controls;
 using UMLer.Paintables.LinkPainters;
+using UMLer.Special;
 
 namespace UMLer.Paintables
 {
@@ -51,6 +52,24 @@ namespace UMLer.Paintables
             }
         }
 
+        private LinkType _LinkTypeFinish = LinkType.NONE;
+        public LinkType LinkTypeFinish { get => _LinkTypeFinish; set
+            {
+                _LinkTypeFinish = value;
+                RaisePropertyChanged("LinkTypeFinish");
+            }
+        } 
+        private LinkType _LinkTypeStart = LinkType.NONE;
+        
+        public LinkType LinkTypeStart { get => _LinkTypeStart; set
+            {
+                _LinkTypeStart = value;
+                RaisePropertyChanged("LinkTypeStart");
+            }
+            }
+
+        private ArrowMaker ArrowMaker = new ArrowMaker();
+
         public override void Regenerate()
         {
             if (!Diagram.Deserializing)
@@ -86,6 +105,10 @@ namespace UMLer.Paintables
             }
         }
 
+        public double AngleStart { get; set; } = 0;
+
+        public double AngleFinish { get; set; } = 0;
+
         public override bool Contains(Point p)
         {
             return LinkPainter.Contains(p);
@@ -106,7 +129,8 @@ namespace UMLer.Paintables
         public override void Paint(Graphics g)
         {
             LinkPainter.Paint(g);
-            
+            StatArrow.DrawArrow(g, LinkTypeStart, PrimaryColor, LineWidth,this.AngleStart, LinkPainter.ConnectionStart,IsFocused());
+            StatArrow.DrawArrow(g, LinkTypeFinish, PrimaryColor, LineWidth, this.AngleFinish, LinkPainter.ConnectionFinish,IsFocused());
         }
     }
 }
