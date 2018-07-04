@@ -26,7 +26,7 @@ namespace UMLer.Paintables
         private const int ELEMENT_MIN_WIDTH = 200;
         private const int ELEMENT_MIN_HEIGHT = 200;
 
-        private InnerTextBox HeaderTextBox;
+        //private InnerTextBox HeaderTextBox;
         private List<InnerTextBox> PropertiesTextBoxes = new List<InnerTextBox>();
         private List<InnerTextBox> MethodsTextBoxes = new List<InnerTextBox>();
 

@@ -65,6 +65,7 @@
     <Compile Include="Paintables\DragCore.cs" />
     <Compile Include="Paintables\DraggableCoreClass.cs" />
     <Compile Include="Paintables\Focus.cs" />
+    <Compile Include="Paintables\FullClass.cs" />
     <Compile Include="Paintables\IDrag.cs" />
     <Compile Include="Paintables\ILink.cs" />
     <Compile Include="Paintables\IPaintable.cs" />
