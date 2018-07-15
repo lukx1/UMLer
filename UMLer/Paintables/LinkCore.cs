@@ -108,6 +108,11 @@ namespace UMLer.Paintables
         public virtual int Width { get => Size.Width; set => Size = new Size(value, Size.Height); }
         [Browsable(false)]
         public virtual int Height { get => Size.Height; set => Size = new Size(Size.Width, value); }
+        private int _ZIndex = 0;
+        public int ZIndex { get => _ZIndex; set {
+                _ZIndex = value;
+                RaisePropertyChanged("ZIndex");
+            } }
 
         public bool IsFocused() => this == Parent.FocusedElement;
 
@@ -186,6 +191,8 @@ namespace UMLer.Paintables
         public event KeyEventHandler KeyUp;
         public event KeyEventHandler KeyDown;
         public event KeyPressEventHandler KeyPressed;
+        public event EventHandler FocusGained;
+        public event EventHandler FocusLost;
 
         public abstract void Paint(Graphics g);
 
@@ -202,6 +209,21 @@ namespace UMLer.Paintables
         public void RaiseKeyPressed(KeyPressEventArgs a)
         {
             KeyPressed?.Invoke(this, a);
+        }
+
+        public void RaiseFocusGained(EventArgs a)
+        {
+            FocusGained?.Invoke(this, a);
+        }
+
+        public void RaiseFocusLost(EventArgs a)
+        {
+            FocusLost?.Invoke(this, a);
+        }
+
+        public virtual bool ShouldDrawFocusBox()
+        {
+            return false;
         }
     }
 }

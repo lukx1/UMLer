@@ -15,7 +15,7 @@ namespace UMLer.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private HashSet<IPaintable> _Paintables = new HashSet<IPaintable>();
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public HashSet<IPaintable> Paintables { get => _Paintables; set
+        public HashSet<IPaintable> Paintables { get => _Paintables; set//TODO:Should auto sort
             {
                 _Paintables = value;
                 RegenFocusObj();
@@ -25,9 +25,13 @@ namespace UMLer.Controls
         public Diagram Diagram { get; set; }
         public IPaintable FocusedElement { get => _FocusedElement; private set
             {
+                var lostFocus = _FocusedElement;// Can't raise before the focus is actually lost
                 _FocusedElement = value;
+                lostFocus?.RaiseFocusLost(new EventArgs());
+                _FocusedElement.RaiseFocusGained(new EventArgs());
                 FocusChanged?.Invoke(this, new PaintableEventArgs(_FocusedElement));
             } }
+        private IPaintable FocusForcedAwayFrom = null;
 
         public event PaintableEventHandler FocusChanged;
 
@@ -62,18 +66,26 @@ namespace UMLer.Controls
             FocusChanged += FocusRefresher;
         }
 
-        private void FocusRefresher(object sender, PaintableEventArgs args)
+        private void ChangeFocus(IPaintable paintable)
         {
-            if (args.IPaintable is ILink)
+            if(paintable is IParentPaintable && ((IParentPaintable)paintable).ParentPaintable != null)
+            {
+                FocusObj.FocusAround = ((IParentPaintable)paintable).ParentPaintable;
+            }
+            else if (paintable is ILink || !paintable.ShouldDrawFocusBox())//TODO:Remove is ILink
             {
                 FocusObj.FocusAround = null;
             }
             else
             {
-                FocusObj.FocusAround = args.IPaintable;
+                FocusObj.FocusAround = paintable;
             }
             this.Invalidate();
-            //throw new NotImplementedException();
+        }
+
+        private void FocusRefresher(object sender, PaintableEventArgs args)
+        {
+            ChangeFocus(args.IPaintable);
         }
 
         public void Focus(IPaintable paintable)
@@ -113,7 +125,7 @@ namespace UMLer.Controls
         {
             base.OnMouseClick(e);
             IPaintable paintableClicked = null;
-            foreach (var paintable in Paintables)
+            foreach (var paintable in Paintables.OrderByDescending(r => r.ZIndex))
             {
                 if (paintable.Contains(e.Location))
                 {
@@ -129,7 +141,7 @@ namespace UMLer.Controls
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            foreach (var paintable in Paintables)
+            foreach (var paintable in Paintables.OrderByDescending(r => r.ZIndex))
             {
                 if (paintable.Contains(e.Location))
                 {
@@ -142,7 +154,7 @@ namespace UMLer.Controls
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            foreach (var paintable in Paintables)
+            foreach (var paintable in Paintables.OrderByDescending(r => r.ZIndex))
             {
                 if (paintable.Contains(e.Location))
                 {
@@ -159,16 +171,12 @@ namespace UMLer.Controls
             return bitmap;
         }
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
-        {
-            base.OnKeyPress(e);
-            FocusedElement?.RaiseKeyPressed(e);
-        }
+        
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            foreach (var paintable in Paintables)
+            foreach (var paintable in Paintables.OrderByDescending(r => r.ZIndex))
             {
                 if (paintable.Contains(e.Location))
                 {
@@ -178,16 +186,22 @@ namespace UMLer.Controls
             }
         }
 
-        protected override void OnKeyUp(KeyEventArgs e)
+        public void KeyUpE(KeyEventArgs e)
         {
             base.OnKeyUp(e);
             FocusedElement?.RaiseKeyUp(e);
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        public void KeyDownE(KeyEventArgs e)
         {
             base.OnKeyDown(e);
             FocusedElement?.RaiseKeyDown(e);
+        }
+
+        public void KeyPressE(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+            FocusedElement?.RaiseKeyPressed(e);
         }
 
         private void HandleIPaintable(IPaintable paintable)
@@ -195,10 +209,41 @@ namespace UMLer.Controls
             paintable.LocationChanged += (object o, EventArgs a) => this.Invalidate();
         }
 
+        public void ReleaseForcedFocusAround()
+        {
+            if (FocusForcedAwayFrom != null)
+            {
+                ChangeFocus(FocusForcedAwayFrom);
+            }
+            FocusForcedAwayFrom = null;
+        }
+
+        public void ForceFocusAround(IPaintable paintable)
+        {
+            FocusForcedAwayFrom = FocusObj.FocusAround;
+            FocusObj.FocusAround = paintable;
+            this.Invalidate();
+        }
+
+        private IEnumerable<IPaintable> PaintablesClone()
+        {
+            List<IPaintable> l = new List<IPaintable>();
+            lock (lockObj)
+            {
+                foreach (var paintable in Paintables.OrderBy(r => r.ZIndex))
+                {
+                    l.Add(paintable);
+                }
+            }
+            return l;
+        }
+
+        private static object lockObj = new object();
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            foreach (var paintable in Paintables)
+            foreach (var paintable in PaintablesClone())
             {
                 paintable.Paint(e.Graphics);
             }

@@ -1,4 +1,5 @@
-﻿using UMLer.Controls;
+﻿using System.Windows.Forms;
+using UMLer.Controls;
 
 namespace UMLer
 {
@@ -34,6 +35,7 @@ namespace UMLer
             this.PropertiesPanel = new System.Windows.Forms.Panel();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.ToolsPanel = new System.Windows.Forms.Panel();
+            this.labelSSave = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.labelAddComplex = new System.Windows.Forms.Label();
@@ -42,7 +44,6 @@ namespace UMLer
             this.ElementPanel = new UMLer.Controls.ElementPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.labelSSave = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.PropertiesPanel.SuspendLayout();
             this.ToolsPanel.SuspendLayout();
@@ -92,13 +93,23 @@ namespace UMLer
             this.ToolsPanel.Size = new System.Drawing.Size(200, 100);
             this.ToolsPanel.TabIndex = 0;
             // 
+            // labelSSave
+            // 
+            this.labelSSave.AutoSize = true;
+            this.labelSSave.Location = new System.Drawing.Point(11, 62);
+            this.labelSSave.Name = "labelSSave";
+            this.labelSSave.Size = new System.Drawing.Size(61, 13);
+            this.labelSSave.TabIndex = 5;
+            this.labelSSave.Text = "labelSSave";
+            this.labelSSave.Click += new System.EventHandler(this.labelSSave_Click);
+            // 
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(103, 23);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
-            this.button2.Text = "Load";
+            this.button2.Text = "XLoad";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -108,7 +119,7 @@ namespace UMLer
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 3;
-            this.button1.Text = "SAve";
+            this.button1.Text = "XSAve";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -174,16 +185,6 @@ namespace UMLer
             this.labelStatus.TabIndex = 0;
             this.labelStatus.Text = "...";
             // 
-            // labelSSave
-            // 
-            this.labelSSave.AutoSize = true;
-            this.labelSSave.Location = new System.Drawing.Point(11, 62);
-            this.labelSSave.Name = "labelSSave";
-            this.labelSSave.Size = new System.Drawing.Size(61, 13);
-            this.labelSSave.TabIndex = 5;
-            this.labelSSave.Text = "labelSSave";
-            this.labelSSave.Click += new System.EventHandler(this.labelSSave_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -192,8 +193,12 @@ namespace UMLer
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ElementPanel);
             this.Controls.Add(this.panel1);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.panel1.ResumeLayout(false);
             this.PropertiesPanel.ResumeLayout(false);
             this.ToolsPanel.ResumeLayout(false);

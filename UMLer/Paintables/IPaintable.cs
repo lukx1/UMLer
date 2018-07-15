@@ -21,7 +21,9 @@ namespace UMLer.Paintables
         Color SecondaryColor { get; set; }
         Color BackgroundColor { get; set; }       
         ElementPanel Parent { get; set; }
+        Font Font { get; set; }
         int ID { get; set; }
+        int ZIndex { get; set; }
 
         event PropertyChangedEventHandler PropertyChanged;
         event EventHandler LocationChanged;
@@ -32,6 +34,8 @@ namespace UMLer.Paintables
         event KeyEventHandler KeyUp;
         event KeyEventHandler KeyDown;
         event KeyPressEventHandler KeyPressed;
+        event EventHandler FocusGained;
+        event EventHandler FocusLost;
 
         void RaiseKeyDown(KeyEventArgs a);
         void RaiseKeyUp(KeyEventArgs a);
@@ -40,6 +44,8 @@ namespace UMLer.Paintables
         void RaiseMouseMove(MouseEventArgs a);
         void RaiseMouseUp(MouseEventArgs a);
         void RaiseMouseDown(MouseEventArgs a);
+        void RaiseFocusGained(EventArgs a);
+        void RaiseFocusLost(EventArgs a);
 
         bool Contains(Point p);
         
@@ -49,5 +55,6 @@ namespace UMLer.Paintables
 
         void Focus();
         bool IsFocused();
+        bool ShouldDrawFocusBox();
     }
 }

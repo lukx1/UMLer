@@ -6,13 +6,16 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UMLer.Controls;
+using UMLer.DiagramData;
 using UMLer.Loading;
 using UMLer.Paintables;
+using UMLer.Special;
 using UMLer.Tools;
 
 namespace UMLer
@@ -22,6 +25,55 @@ namespace UMLer
 
         private Diagram diagram = new Diagram();
 
+        private static Clazz CreateTestClass()
+        {
+            var c = new Clazz()
+            {
+                Name = "TestClass",
+                AccessModifier = AccessModifier.PUBLIC,
+                FullName = "UMLer.TestClass",
+                Namespace = "UMLer",
+                Fields = new List<Field>()
+                {
+                    new Field()
+                    {
+                        Name = "TestField A",
+                        Type = Clazz.CreateJV(typeof(int)),
+                        AccessModifier = AccessModifier.PUBLIC
+                    },
+                    new Field()
+                    {
+                        Name = "TestField B",
+                        Type = Clazz.CreateJV(typeof(string)),
+                        AccessModifier = AccessModifier.PRIVATE
+                    },
+                    new Field()
+                    {
+                        Name = "TestField C",
+                        Type = Clazz.CreateJV(typeof(XmlColor)),
+                        AccessModifier = AccessModifier.PROTECTED
+                    }
+                },
+                Methods = new List<Method>()
+                {
+                    new Method()
+                    {
+                        Name = "Foo",
+                        AccessModifier = AccessModifier.PUBLIC,
+                        IsVirtual = true,
+                        ReturnType = Clazz.CreateJV(typeof(int))
+                    },
+                    new Method()
+                    {
+                        Name = "CreatePaintable",
+                        AccessModifier = AccessModifier.PRIVATE,
+                        ReturnType = Clazz.CreateJV(typeof(IPaintable))
+                    }
+                }
+            };
+            return c;
+        }
+
         private void TestBoot()
         {
             var e1 = new LargeClass(ElementPanel) { Location = new Point(100, 100), Properties = new List<string>() { "Tohle", "Je", "Test" } };
@@ -30,6 +82,8 @@ namespace UMLer
             ElementPanel.Paintables.Add(e2);
             ElementPanel.Paintables.Add(new Link(e1, e2));
             ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
+            ElementPanel.Paintables.Add(new DiagramClass() { Parent = ElementPanel,Location = new Point(300,300), Size = new Size(100,100),RepresentingClass = CreateTestClass()});
+            //ElementPanel.Paintables.Add(new InnerTextField() { Location = new Point(300,300),Size = new Size(100,13),Parent = ElementPanel});
             //ElementPanel.Controls.Add(new InvisTextBox() {Location = new Point(400,400),Size = new Size(20,13) });
         }
 
@@ -49,8 +103,13 @@ namespace UMLer
             diagram.BindProperty(propertyGrid);
             diagram.BindStatusLabel(labelStatus);
             diagram.BindElementPanel(ElementPanel);
-            diagram.SelectedTool = new Pointer();
+            diagram.SelectedTool = new Tools.Pointer();
             ElementPanel.BindDiagram(diagram);
+        }
+
+        private class Test
+        {
+
         }
 
         public Form1()
@@ -65,7 +124,7 @@ namespace UMLer
 
         private void LabelPointer_Click(object sender, EventArgs e)
         {
-            diagram.SelectedTool = new Pointer();
+            diagram.SelectedTool = new Tools.Pointer();
         }
 
         private void LabelLinker_Click(object sender, EventArgs e)
@@ -136,6 +195,21 @@ namespace UMLer
             {
                 MessageBox.Show("Error " + ex.ToString());
             }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            ElementPanel.KeyDownE(e);
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            ElementPanel.KeyPressE(e);
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            ElementPanel.KeyUpE(e);
         }
     }
 }
