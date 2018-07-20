@@ -25,7 +25,7 @@ namespace UMLer
 
         private Diagram diagram = new Diagram();
 
-        private static Clazz CreateTestClass()
+       /* private static Clazz CreateTestClass()
         {
             var c = new Clazz()
             {
@@ -72,6 +72,19 @@ namespace UMLer
                 }
             };
             return c;
+        }
+        */
+
+
+        private static Clazz CreateTestClass()
+        {
+            ClazzHelper helper = new ClazzHelper();
+            IMethod test = helper.MakeMethodFromSyntax("private int X(int Y, bool b)");
+            return new Clazz()
+            {
+                
+            }
+            ;
         }
 
         private void TestBoot()

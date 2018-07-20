@@ -31,7 +31,7 @@ namespace UMLer.Paintables
 
         private void PaintClassSymbol(Graphics g)
         {
-            switch (clazz.AccessModifier)
+            /*switch (clazz.AccessModifier)
             {
                 case AccessModifier.PUBLIC:
                     break;
@@ -46,7 +46,7 @@ namespace UMLer.Paintables
                 case AccessModifier.PROTECTED_INTERNAL:
                     break;
             }
-            
+            */
         }
 
         private void PaintStaticSymbol(Graphics g)

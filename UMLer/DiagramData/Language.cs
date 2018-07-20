@@ -8,6 +8,6 @@ namespace UMLer.DiagramData
 {
     public enum Language
     {
-        CSHARP,JAVA,C,CPP
+        CSHARP,CPP,JAVA
     }
 }

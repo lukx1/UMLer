@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace UMLer.DiagramData
 {
-    public class SpecialModifiers
+    public enum ExtraModifier
     {
-        
+        STATIC,
+        ABSTRACT,
+        OVERRIDE,
+
     }
 }
