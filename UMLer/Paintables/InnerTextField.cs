@@ -69,6 +69,25 @@ namespace UMLer.Paintables
         public override Color BackgroundColor { get => ParentPaintable.BackgroundColor; set => ParentPaintable.BackgroundColor = value; }
         public override Font Font { get => ParentPaintable.Font; set => ParentPaintable.Font = value; }
 
+        public class TextWrittenArgs : EventArgs
+        {
+            public string PreviousText { get; private set; }
+            public string NewText { get; private set; }
+
+            public TextWrittenArgs(string previousText, string newText)
+            {
+                PreviousText = previousText;
+                NewText = newText;
+            }
+
+        }
+
+        public delegate void TextWrittenHandler(object sender, TextWrittenArgs args);
+        public event TextWrittenHandler TextWritten;
+
+        private bool DidUserWrite = false;
+        private string UnchangedText = "";
+
         public InnerTextField(IPaintable ParentPaintable) : base(true)
         {
             _ParentPaintable = ParentPaintable;
@@ -77,6 +96,8 @@ namespace UMLer.Paintables
             KeyUp += (object o, KeyEventArgs e) => FieldKeyUp(e);
             KeyDown += (object o, KeyEventArgs e) => FieldKeyDown(e);
             KeyPressed += (object o, KeyPressEventArgs e) => FieldKeyPress(e);
+            FocusGained += (object o, EventArgs e) => UnchangedText = this.Text;
+            FocusLost += (object o, EventArgs e) => { if (DidUserWrite) { TextWritten?.Invoke(this,new TextWrittenArgs(UnchangedText,Text));DidUserWrite = false; } };
             ParentPaintable.PropertyChanged += ParentPaintable_PropertyChanged;
         }
 
@@ -97,8 +118,12 @@ namespace UMLer.Paintables
 
         public virtual void FieldKeyUp(KeyEventArgs args)
         {
+            
             if (args.KeyCode == Keys.Back && Text.Length > 0)
+            {
                 Text = Text.Substring(0, Text.Length - 1);
+                DidUserWrite = true;
+            }
         }
 
         public virtual void FieldKeyPress(KeyPressEventArgs args)
@@ -106,6 +131,7 @@ namespace UMLer.Paintables
             if (Char.IsControl(args.KeyChar))
                 return;
             Text += args.KeyChar;
+            DidUserWrite = true;
         }
 
 

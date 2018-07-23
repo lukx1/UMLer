@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using UMLer.Special;
 
 namespace UMLer.DiagramData
 {
@@ -97,7 +98,7 @@ namespace UMLer.DiagramData
             }
             else
             {
-                throw new ArgumentException("Syntax is not valid");
+                throw new ParseException("Syntax is not valid");
             }
             return p;
         }
@@ -111,7 +112,7 @@ namespace UMLer.DiagramData
                 return AccessModifier.PRIVATE;
             else if (s == "PROTECTED")
                 return AccessModifier.PROTECTED;
-            throw new ArgumentException("Cannot parse access modifier");
+            throw new ParseException("Cannot parse access modifier");
         }
 
         public IMethod MakeMethodFromSyntax(string s)
@@ -119,9 +120,9 @@ namespace UMLer.DiagramData
             IMethod method = new Clazz.Method();
             var su = s.ToUpper();
             if (su.Contains("STATIC"))
-                method.ExtraModifier.Add(ExtraModifier.STATIC);
+                method.ExtraModifiers.Add(ExtraModifier.STATIC);
             if (su.Contains("ABSTRACT") || su.Contains("VIRTUAL"))
-                method.ExtraModifier.Add(ExtraModifier.ABSTRACT);
+                method.ExtraModifiers.Add(ExtraModifier.ABSTRACT);
             var fixedString = Regex.Replace(s, MethodReplaceRegX, "",RegexOptions.IgnoreCase);
             fixedString = Regex.Replace(fixedString, "\\s\\s+", "");
             var nameing = fixedString.Substring(0, fixedString.IndexOf('('));
@@ -157,7 +158,7 @@ namespace UMLer.DiagramData
                 var pT = part.Trim();
                 var pts = pT.Split(' ');
                 if (pts.Length != 2)
-                    throw new ArgumentException("Invalid argument syntax");
+                    throw new ParseException("Invalid argument syntax");
                 fields.Add(new Clazz.Field()
                 {
                     Type = pts[0],
@@ -178,7 +179,7 @@ namespace UMLer.DiagramData
                 field.Type = parts[1];
                 field.Name = parts[2];
             }
-            else if (Regex.IsMatch(s, ClassSyntaxRegXNoAM, RegexOptions.IgnoreCase))
+            else if (Regex.IsMatch(s, FieldSyntaxRegXNoAM, RegexOptions.IgnoreCase))
             {
                 var parts = s.Split(' ');
                 field.AccessModifier = AccessModifier.PUBLIC;
@@ -187,7 +188,7 @@ namespace UMLer.DiagramData
             }
             else
             { //TODO:Better exceptions
-                throw new ArgumentException("Field syntax is not valid");
+                throw new ParseException("Field syntax is not valid");
             }
             return field;
         }

@@ -57,7 +57,7 @@ namespace UMLer
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 761);
+            this.panel1.Size = new System.Drawing.Size(200, 749);
             this.panel1.TabIndex = 0;
             // 
             // PropertiesPanel
@@ -67,7 +67,7 @@ namespace UMLer
             this.PropertiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PropertiesPanel.Location = new System.Drawing.Point(0, 100);
             this.PropertiesPanel.Name = "PropertiesPanel";
-            this.PropertiesPanel.Size = new System.Drawing.Size(200, 661);
+            this.PropertiesPanel.Size = new System.Drawing.Size(200, 649);
             this.PropertiesPanel.TabIndex = 1;
             // 
             // propertyGrid
@@ -75,7 +75,7 @@ namespace UMLer
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(196, 657);
+            this.propertyGrid.Size = new System.Drawing.Size(196, 645);
             this.propertyGrid.TabIndex = 0;
             // 
             // ToolsPanel
@@ -105,6 +105,7 @@ namespace UMLer
             // 
             // button2
             // 
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(103, 23);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -115,6 +116,7 @@ namespace UMLer
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(56, 69);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -161,7 +163,7 @@ namespace UMLer
             this.ElementPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ElementPanel.Location = new System.Drawing.Point(200, 0);
             this.ElementPanel.Name = "ElementPanel";
-            this.ElementPanel.Size = new System.Drawing.Size(584, 761);
+            this.ElementPanel.Size = new System.Drawing.Size(584, 749);
             this.ElementPanel.TabIndex = 1;
             // 
             // panel2
@@ -170,7 +172,7 @@ namespace UMLer
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.labelStatus);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(200, 742);
+            this.panel2.Location = new System.Drawing.Point(200, 730);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(584, 19);
             this.panel2.TabIndex = 2;
@@ -189,7 +191,7 @@ namespace UMLer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 761);
+            this.ClientSize = new System.Drawing.Size(784, 749);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.ElementPanel);
             this.Controls.Add(this.panel1);

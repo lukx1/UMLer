@@ -66,6 +66,7 @@
     <Compile Include="DiagramData\IClazz.cs" />
     <Compile Include="DiagramData\IField.cs" />
     <Compile Include="DiagramData\IMethod.cs" />
+    <Compile Include="DiagramData\ISyntax.cs" />
     <Compile Include="DiagramData\Language.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -80,6 +81,7 @@
     <Compile Include="Paintables\DiagramClass.cs" />
     <Compile Include="Paintables\DragCore.cs" />
     <Compile Include="Paintables\DraggableCoreClass.cs" />
+    <Compile Include="Paintables\FieldITF.cs" />
     <Compile Include="Paintables\Focus.cs" />
     <Compile Include="Paintables\FullClass.cs" />
     <Compile Include="Paintables\IDrag.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Paintables\LinkPainters\LinkPainterBuilder.cs" />
     <Compile Include="Paintables\LinkPainters\LinkType.cs" />
     <Compile Include="Paintables\LinkPainters\PenMaker.cs" />
+    <Compile Include="Paintables\MethodITF.cs" />
     <Compile Include="Paintables\SimpleClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Special\IPantable.cs" />
     <Compile Include="Special\LinkMath.cs" />
     <Compile Include="Special\NoSerializeAttribute.cs" />
+    <Compile Include="Special\ParseException.cs" />
     <Compile Include="Special\SerializeableKeyValue.cs" />
     <Compile Include="Special\StatArrow.cs" />
     <Compile Include="Special\XmlColor.cs" />

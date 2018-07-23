@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace UMLer.DiagramData
 {
-    public interface IField
+    public interface IField : ISyntax
     {
         AccessModifier AccessModifier { get; set; }
         string Name { get; set; }
         string Type { get; set; }
-        IList<ExtraModifier> ExtraModifier { get; set; }
+        IList<ExtraModifier> ExtraModifiers { get; set; }
     }
 }

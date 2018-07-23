@@ -79,10 +79,17 @@ namespace UMLer
         private static Clazz CreateTestClass()
         {
             ClazzHelper helper = new ClazzHelper();
-            IMethod test = helper.MakeMethodFromSyntax("private int X(int Y, bool b)");
+            IMethod test0 = helper.MakeMethodFromSyntax("private int X(int Y, bool b)");
+            IMethod test1 = helper.MakeMethodFromSyntax("private bool Y(int Y, Helper boom)");
+            IMethod test2 = helper.MakeMethodFromSyntax("private Dog X(int Y, bool b)");
+            IField field0 = helper.MakeFieldFromSyntax("public int Jooo");
+            IField field1 = helper.MakeFieldFromSyntax("public string Name");
+            IField field2 = helper.MakeFieldFromSyntax("protected Dog Pet");
             return new Clazz()
             {
-                
+                Name = "TestClass",
+                Methods = new List<IMethod>() {test0,test1,test2 },
+                Fields = new List<IField>() { field0,field2,field1}
             }
             ;
         }

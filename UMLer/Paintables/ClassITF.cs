@@ -4,17 +4,40 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using UMLer.DiagramData;
+using UMLer.Special;
 
 namespace UMLer.Paintables
 {
     public class ClassITF : InnerTextField
     {
-        private Clazz clazz;
+        private IClazz RepresentingClass;
+        private ClazzHelper helper = new ClazzHelper();
 
-        public ClassITF(IPaintable ParentPaintable,Clazz clazz) : base(ParentPaintable)
+        public ClassITF(IPaintable ParentPaintable,IClazz RepresentingClass) : base(ParentPaintable)
         {
-            this.clazz = clazz;
+            this.RepresentingClass = RepresentingClass;
+            this.TextWritten += ClassITF_TextWritten;
+        }
+
+        private void ClassITF_TextWritten(object sender, TextWrittenArgs e)
+        {
+            try
+            {
+                var res = helper.MakeClassFromSyntax(e.NewText);//TODO:Shouldn't use this function
+                this.RepresentingClass.AccessModifier = res.AccessModifier;
+                this.RepresentingClass.ExtraModifiers = res.ExtraModifiers;
+                this.RepresentingClass.Name = res.Name;
+                this.RepresentingClass.Fields = res.Fields;
+                this.RepresentingClass.Methods = res.Methods;
+                this.Text = RepresentingClass.ToSyntax();
+            }
+            catch (ParseException ex)
+            {//TODO:Better
+                MessageBox.Show(ex.ToString());
+                this.Text = e.PreviousText;
+            }
         }
 
         public override void Paint(Graphics g)
@@ -31,22 +54,6 @@ namespace UMLer.Paintables
 
         private void PaintClassSymbol(Graphics g)
         {
-            /*switch (clazz.AccessModifier)
-            {
-                case AccessModifier.PUBLIC:
-                    break;
-                case AccessModifier.PRIVATE:
-                    break;
-                case AccessModifier.PROTECTED:
-                    break;
-                case AccessModifier.PRIVATE_PROTECTED:
-                    break;
-                case AccessModifier.INTERNAL:
-                    break;
-                case AccessModifier.PROTECTED_INTERNAL:
-                    break;
-            }
-            */
         }
 
         private void PaintStaticSymbol(Graphics g)
@@ -56,7 +63,7 @@ namespace UMLer.Paintables
 
         private void PaintDisplayMode(Graphics g)
         {
-            g.DrawString(clazz.Name,Font, new SolidBrush(PrimaryColor), new RectangleF(Location.X, Location.Y, Size.Width, Size.Height), StringFormat);
+            g.DrawString(RepresentingClass.Name,Font, new SolidBrush(PrimaryColor), new RectangleF(Location.X, Location.Y, Size.Width, Size.Height), StringFormat);
             PaintClassSymbol(g);
             PaintStaticSymbol(g);
         }

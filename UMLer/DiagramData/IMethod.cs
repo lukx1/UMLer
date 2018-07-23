@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace UMLer.DiagramData
 {
-    public interface IMethod
+    public interface IMethod : ISyntax
     {
         AccessModifier AccessModifier { get; set; }
         string Name { get; set; }
         string ReturnType { get; set; }
         IEnumerable<IField> Parameters { get; set; }
-        IList<ExtraModifier> ExtraModifier { get; set; }
+        IList<ExtraModifier> ExtraModifiers { get; set; }
     }
 }

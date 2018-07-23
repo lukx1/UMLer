@@ -91,8 +91,9 @@ namespace UMLer.Paintables
             if (HeaderField == null)
             {
                 HeaderField = new InnerTextField(this);
-                HeaderField.Name = "Header Field";
                 MakeStandardITF(HeaderField);
+                HeaderField.Name = "Header Field";
+                HeaderField.Text = RepresentingClass.ToSyntax();
             }
             else
             {
@@ -124,14 +125,15 @@ namespace UMLer.Paintables
         {
             var fieldsHeight = RepresentingClass.Fields.Count() * (Font.Height + LINE_VERT_SEP);
             var fieldHeight = Font.Height + LINE_VERT_SEP;
-            if (RepresentingClass.Fields.Count() > 0)
+            if (RepresentingClass.Fields.Count() > 0 && Fields.Count() == 0) // Rep fields exist but aren't drawn yet
             {
                 var startY = HeaderRect.Y + HeaderRect.Height;
                 for (int i = 0; i < RepresentingClass.Fields.Count(); i++)
                 {
-                    var field = new InnerTextField(this);
+                    var field = new FieldITF(this,RepresentingClass.Fields[i]);
                     field.Name = RepresentingClass.Fields[i].Name;
                     field.PaintBackground = true;
+                    field.Text = RepresentingClass.Fields[i].ToSyntax();
                     field.BackgroundColor = Color.Red;
                     MakeStandardITF(field);
                     field.Location = new Point(DisplayRectangle.X, startY + fieldHeight * i);
@@ -143,7 +145,7 @@ namespace UMLer.Paintables
                     }
                 }
             }
-            else
+            else // Fields exist but must be updated
             {
                 var startY = HeaderRect.Y + HeaderRect.Height;
                 for (int i = 0; i < Fields.Count(); i++)
