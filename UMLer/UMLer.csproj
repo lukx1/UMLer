@@ -60,6 +60,7 @@
     <Compile Include="DiagramData\Attributes\CsharpAttribute.cs" />
     <Compile Include="DiagramData\Attributes\JavaAttribute.cs" />
     <Compile Include="DiagramData\Attributes\IForLanguage.cs" />
+    <Compile Include="DiagramData\ClassType.cs" />
     <Compile Include="DiagramData\Clazz.cs" />
     <Compile Include="DiagramData\ClazzHelper.cs" />
     <Compile Include="DiagramData\ExtraModifier.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Paintables\LinkPainters\LinkType.cs" />
     <Compile Include="Paintables\LinkPainters\PenMaker.cs" />
     <Compile Include="Paintables\MethodITF.cs" />
+    <Compile Include="Paintables\PositionBinder.cs" />
     <Compile Include="Paintables\SimpleClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -199,6 +201,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="imgs\dunsafe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\iclass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\ienum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\iinterface.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\iprivate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\iprotected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\ipublic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\istatic.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -68,6 +68,7 @@ namespace UMLer
         public static readonly int FocusDistanceFromBox = 10;
         public static readonly float FocusPenWidthMultiplier = 4f;
         public static readonly float PenDefaultWidth = 2f;
+        public static readonly int IconSize = 24;
 
         public Diagram()
         {

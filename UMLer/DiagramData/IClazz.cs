@@ -10,6 +10,7 @@ namespace UMLer.DiagramData
     {
         Language Language { get; set; }
         AccessModifier AccessModifier { get; set; }
+        ClassType ClassType { get; set; }
         string Name { get; set; }
         IList<IMethod> Methods { get; set; }
         IList<IField> Fields { get; set; }

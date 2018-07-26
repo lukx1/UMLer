@@ -63,9 +63,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dabstract {
+        internal static System.Drawing.Bitmap iclass {
             get {
-                object obj = ResourceManager.GetObject("dabstract", resourceCulture);
+                object obj = ResourceManager.GetObject("iclass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dasynch {
+        internal static System.Drawing.Bitmap ienum {
             get {
-                object obj = ResourceManager.GetObject("dasynch", resourceCulture);
+                object obj = ResourceManager.GetObject("ienum", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dclass {
+        internal static System.Drawing.Bitmap iinterface {
             get {
-                object obj = ResourceManager.GetObject("dclass", resourceCulture);
+                object obj = ResourceManager.GetObject("iinterface", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,9 +93,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap dconst {
+        internal static System.Drawing.Bitmap iprivate {
             get {
-                object obj = ResourceManager.GetObject("dconst", resourceCulture);
+                object obj = ResourceManager.GetObject("iprivate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +103,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ddelegate {
+        internal static System.Drawing.Bitmap iprotected {
             get {
-                object obj = ResourceManager.GetObject("ddelegate", resourceCulture);
+                object obj = ResourceManager.GetObject("iprotected", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +113,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap denum {
+        internal static System.Drawing.Bitmap ipublic {
             get {
-                object obj = ResourceManager.GetObject("denum", resourceCulture);
+                object obj = ResourceManager.GetObject("ipublic", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,109 +123,9 @@ namespace UMLer.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap devent {
+        internal static System.Drawing.Bitmap istatic {
             get {
-                object obj = ResourceManager.GetObject("devent", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dinterface {
-            get {
-                object obj = ResourceManager.GetObject("dinterface", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap doverride {
-            get {
-                object obj = ResourceManager.GetObject("doverride", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dprivate {
-            get {
-                object obj = ResourceManager.GetObject("dprivate", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dprotected {
-            get {
-                object obj = ResourceManager.GetObject("dprotected", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dpublic {
-            get {
-                object obj = ResourceManager.GetObject("dpublic", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dread_only {
-            get {
-                object obj = ResourceManager.GetObject("dread_only", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dstatic {
-            get {
-                object obj = ResourceManager.GetObject("dstatic", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dstruct {
-            get {
-                object obj = ResourceManager.GetObject("dstruct", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dunsafe {
-            get {
-                object obj = ResourceManager.GetObject("dunsafe", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap dvirtual {
-            get {
-                object obj = ResourceManager.GetObject("dvirtual", resourceCulture);
+                object obj = ResourceManager.GetObject("istatic", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

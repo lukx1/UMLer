@@ -90,7 +90,7 @@ namespace UMLer.Paintables
             HeaderRect = new Rectangle(Location.X, Location.Y, (int)headerWidth, headerHeight);
             if (HeaderField == null)
             {
-                HeaderField = new InnerTextField(this);
+                HeaderField = new ClassITF(this,RepresentingClass);
                 MakeStandardITF(HeaderField);
                 HeaderField.Name = "Header Field";
                 HeaderField.Text = RepresentingClass.ToSyntax();

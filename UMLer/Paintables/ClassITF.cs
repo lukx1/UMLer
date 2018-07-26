@@ -14,11 +14,14 @@ namespace UMLer.Paintables
     {
         private IClazz RepresentingClass;
         private ClazzHelper helper = new ClazzHelper();
+        private Rectangle ClassRect;
+
 
         public ClassITF(IPaintable ParentPaintable,IClazz RepresentingClass) : base(ParentPaintable)
         {
             this.RepresentingClass = RepresentingClass;
             this.TextWritten += ClassITF_TextWritten;
+            
         }
 
         private void ClassITF_TextWritten(object sender, TextWrittenArgs e)
@@ -54,11 +57,29 @@ namespace UMLer.Paintables
 
         private void PaintClassSymbol(Graphics g)
         {
+            var drawLoc = this.Location;
+            switch (RepresentingClass.ClassType)
+            {
+                default:
+                case ClassType.CLASS:
+                    g.DrawImage(Properties.Resources.iclass, drawLoc);
+                    break;
+                case ClassType.INTERFACE:
+                    g.DrawImage(Properties.Resources.iinterface, drawLoc);
+                    break;
+                case ClassType.ENUM:
+                    g.DrawImage(Properties.Resources.ienum, drawLoc);
+                    break;
+            }
+            
         }
 
         private void PaintStaticSymbol(Graphics g)
         {
-
+            if (!RepresentingClass.ExtraModifiers.Contains(ExtraModifier.STATIC))
+                return;
+            var drawLoc = this.Location + new Size(Diagram.IconSize, 0); // Next to class symbol
+            g.DrawImage(Properties.Resources.istatic, drawLoc);
         }
 
         private void PaintDisplayMode(Graphics g)

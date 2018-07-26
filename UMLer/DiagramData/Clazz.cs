@@ -11,6 +11,7 @@ namespace UMLer.DiagramData
     {
         public Language Language { get; set; } = Language.CSHARP;
         public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
+        public ClassType ClassType { get; set; } = ClassType.CLASS;
         public string Name { get; set; }
         [XmlIgnore]
         public IList<IMethod> Methods { get; set; } = new List<IMethod>();
