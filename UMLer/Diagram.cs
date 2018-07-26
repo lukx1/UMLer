@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,6 +70,8 @@ namespace UMLer
         public static readonly float FocusPenWidthMultiplier = 4f;
         public static readonly float PenDefaultWidth = 2f;
         public static readonly int IconSize = 24;
+
+        public static Color HighlightColor { get; set; } = Color.White;
 
         public Diagram()
         {

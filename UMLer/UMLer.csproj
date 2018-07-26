@@ -223,5 +223,11 @@
   <ItemGroup>
     <None Include="imgs\24\istatic.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\ioverride.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="imgs\24\iabstract.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

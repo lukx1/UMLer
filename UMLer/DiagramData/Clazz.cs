@@ -38,6 +38,8 @@ namespace UMLer.DiagramData
                 builder.Append(item.ToString().ToLower());
                 first = false;
             }
+            if (builder.Length > 0)
+                builder.Insert(0, " ");
             return builder.ToString();
         }
 
@@ -73,6 +75,7 @@ namespace UMLer.DiagramData
                     builder.Append(param.Type).Append(" ").Append(param.Name);
                     first = false;
                 }
+                
                 return builder.ToString();
             }
 

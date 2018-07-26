@@ -23,7 +23,7 @@ namespace UMLer.DiagramData
         private static readonly string FieldSyntaxRegXBest = $"^(public|private|protected) {VNRX} {VNRX}$";
         private static readonly string FieldSyntaxRegXNoAM = $"^{VNRX} {VNRX}$";
 
-        private static readonly string MethodReplaceRegX = GenMethodReplaceRegX();
+        private static readonly string ExtraModReplaceRegX = GenMethodReplaceRegX();
 
         private static string GenMethodReplaceRegX()
         {
@@ -62,11 +62,18 @@ namespace UMLer.DiagramData
             public string Name { get; set; }
             public string FixedText { get; set; }
             public string OriginalText { get; set; }
+            public bool IsStatic = true;
         }
 
         private ParseClassResult ParseClassSyntax(string s)
         {
             ParseClassResult p = new ParseClassResult();
+            var su = s.ToUpper();
+            if (su.Contains("STATIC "))
+            {
+                p.IsStatic = true;
+                s = Regex.Replace(s, "static ", "",RegexOptions.IgnoreCase);
+            }
             p.OriginalText = s;
             if (Regex.IsMatch(s, ClassSyntaxRegXBest, RegexOptions.IgnoreCase))
             {
@@ -123,7 +130,7 @@ namespace UMLer.DiagramData
                 method.ExtraModifiers.Add(ExtraModifier.STATIC);
             if (su.Contains("ABSTRACT") || su.Contains("VIRTUAL"))
                 method.ExtraModifiers.Add(ExtraModifier.ABSTRACT);
-            var fixedString = Regex.Replace(s, MethodReplaceRegX, "",RegexOptions.IgnoreCase);
+            var fixedString = Regex.Replace(s, ExtraModReplaceRegX, "",RegexOptions.IgnoreCase);
             fixedString = Regex.Replace(fixedString, "\\s\\s+", "");
             var nameing = fixedString.Substring(0, fixedString.IndexOf('('));
             if(Regex.IsMatch(fixedString, "^(public|private|protected).*$", RegexOptions.IgnoreCase))
@@ -196,11 +203,15 @@ namespace UMLer.DiagramData
         public IClazz MakeClassFromSyntax(string s)
         {
             var r = ParseClassSyntax(s);
-            return new Clazz()
+            var c = new Clazz()
             {
                 AccessModifier = r.AccessModifier,
                 Name = r.Name
+                
             };
+            if (r.IsStatic)
+                c.ExtraModifiers.Add(ExtraModifier.STATIC);
+            return c;
         }
     }
 }

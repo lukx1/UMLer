@@ -113,6 +113,10 @@ namespace UMLer.Paintables
         {
             if(PaintBackground)
                 g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
+            if (this.IsFocused())
+            {
+                g.DrawRectangle(new Pen(new SolidBrush(Diagram.HighlightColor), Diagram.PenDefaultWidth), DisplayRectangle);
+            }
             g.DrawString(Text,Font,new SolidBrush(PrimaryColor),new RectangleF(Location.X,Location.Y,Size.Width,Size.Height),StringFormat);
         }
 
@@ -137,7 +141,14 @@ namespace UMLer.Paintables
 
         public virtual void FieldKeyDown(KeyEventArgs args)
         {
-            //Empty
+            if (args.KeyCode == Keys.Enter)
+                this.ParentPaintable.Focus();
+            else if(args.KeyCode == Keys.Escape)
+            {
+                this.Text = UnchangedText;
+                this.ParentPaintable.Focus();
+            }
+
         }
 
         public override bool ShouldDrawFocusBox()
