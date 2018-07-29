@@ -28,6 +28,8 @@ namespace UMLer.Paintables
         private const int LINE_VERT_SEP = 3;
 
         private Rectangle HeaderRect = new Rectangle();
+        private Rectangle FieldRect = new Rectangle();
+        private Rectangle MethodRect = new Rectangle();
 
         private bool RecalcPaint = true;
 
@@ -125,6 +127,7 @@ namespace UMLer.Paintables
         {
             var fieldsHeight = RepresentingClass.Fields.Count() * (Font.Height + LINE_VERT_SEP);
             var fieldHeight = Font.Height + LINE_VERT_SEP;
+            FieldRect = new Rectangle(HeaderRect.Location,new Size(HeaderRect.X,fieldsHeight));
             if (RepresentingClass.Fields.Count() > 0 && Fields.Count() == 0) // Rep fields exist but aren't drawn yet
             {
                 var startY = HeaderRect.Y + HeaderRect.Height;
@@ -159,7 +162,39 @@ namespace UMLer.Paintables
 
         private void CalculateMethods()
         {
-
+            var methodsHeight = RepresentingClass.Methods.Count() * (Font.Height + LINE_VERT_SEP);
+            var methodHeight = Font.Height + LINE_VERT_SEP;
+            MethodRect = new Rectangle(HeaderRect.Location,new Size(HeaderRect.X,methodsHeight));
+            if (RepresentingClass.Methods.Count() > 0 && Methods.Count() == 0) // Rep fields exist but aren't drawn yet
+            {
+                var startY = HeaderRect.Y + HeaderRect.Height + FieldRect.Height;
+                for (int i = 0; i < RepresentingClass.Methods.Count(); i++)
+                {
+                    var methoditf = new MethodITF(this, RepresentingClass.Methods[i]);
+                    methoditf.Name = RepresentingClass.Methods[i].Name;
+                    methoditf.PaintBackground = true;
+                    methoditf.Text = RepresentingClass.Methods[i].ToSyntax();
+                    methoditf.BackgroundColor = Color.Red;
+                    MakeStandardITF(methoditf);
+                    methoditf.Location = new Point(DisplayRectangle.X, startY + methodHeight * i);
+                    methoditf.Size = new Size(DisplayRectangle.Width, methodHeight);
+                    Methods.Add(methoditf);
+                    lock (lockObj)
+                    {
+                        Parent.Paintables.Add(methoditf);
+                    }
+                }
+            }
+            else // Methods exist but must be updated
+            {
+                var startY = HeaderRect.Y + HeaderRect.Height + FieldRect.Height;
+                for (int i = 0; i < Methods.Count(); i++)
+                {
+                    var methoditf = Methods[i];
+                    methoditf.Location = new Point(DisplayRectangle.X, startY + methodHeight * i);
+                    methoditf.Size = new Size(DisplayRectangle.Width, methodHeight);
+                }
+            }
         }
 
         private void CalculatePainting(Graphics g)
@@ -167,9 +202,10 @@ namespace UMLer.Paintables
             CalculateHeader(g);
             CalculateFields();
             CalculateMethods();
+            this.Height = HeaderRect.Height + FieldRect.Height + MethodRect.Height;
         }
 
-        private void PaintHeader(Graphics g)
+        private void PaintAll(Graphics g)
         {
             if (RecalcPaint)
             {
@@ -181,8 +217,7 @@ namespace UMLer.Paintables
 
         public override void Paint(Graphics g)
         {
-            PaintHeader(g);
-
+            PaintAll(g);
         }
     }
 }

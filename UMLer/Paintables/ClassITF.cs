@@ -16,12 +16,10 @@ namespace UMLer.Paintables
         private ClazzHelper helper = new ClazzHelper();
         private Rectangle ClassRect;
 
-
         public ClassITF(IPaintable ParentPaintable,IClazz RepresentingClass) : base(ParentPaintable)
         {
             this.RepresentingClass = RepresentingClass;
             this.TextWritten += ClassITF_TextWritten;
-            
         }
 
         private void ClassITF_TextWritten(object sender, TextWrittenArgs e)
@@ -78,7 +76,7 @@ namespace UMLer.Paintables
         {
             if (!RepresentingClass.ExtraModifiers.Contains(ExtraModifier.STATIC))
                 return;
-            var drawLoc = this.Location + new Size(Diagram.IconSize, 0); // Next to class symbol
+            var drawLoc = this.Location + new Size(Diagram.ImageSize, 0); // Next to class symbol
             g.DrawImage(Properties.Resources.istatic, drawLoc);
         }
 
@@ -88,6 +86,5 @@ namespace UMLer.Paintables
             PaintClassSymbol(g);
             PaintStaticSymbol(g);
         }
-
     }
 }

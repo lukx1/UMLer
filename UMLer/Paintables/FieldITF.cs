@@ -55,30 +55,30 @@ namespace UMLer.Paintables
 
         private void PaintExtras(Graphics g)
         {
-            int offset = Diagram.IconSize;
+            int offset = Diagram.ImageSize;
             var yLoc = this.Location.Y;
             if (RepresentingField.ExtraModifiers.Contains(ExtraModifier.ABSTRACT))
             {
                 g.DrawImage(Properties.Resources.iabstract, new Point(offset, yLoc));
-                offset += Diagram.IconSize;
+                offset += Diagram.ImageSize;
             }
             if (RepresentingField.ExtraModifiers.Contains(ExtraModifier.OVERRIDE))
             {
                 g.DrawImage(Properties.Resources.ioverride, new Point(offset, yLoc));
-                offset += Diagram.IconSize;
+                offset += Diagram.ImageSize;
             }
             if (RepresentingField.ExtraModifiers.Contains(ExtraModifier.STATIC))
             {
                 g.DrawImage(Properties.Resources.istatic, new Point(offset, yLoc));
-                offset += Diagram.IconSize;
+                offset += Diagram.ImageSize;
             }
         }
 
         private void PaintDisplayMode(Graphics g)
         {
-            int offset = Diagram.IconSize; // Text is pushed by access mod img
+            int offset = Diagram.ImageSize; // Text is pushed by access mod img
             PaintAccessMod(g);
-            offset += Diagram.IconSize * RepresentingField.ExtraModifiers.Count(); // Pushed by each additional image
+            offset += Diagram.ImageSize * RepresentingField.ExtraModifiers.Count(); // Pushed by each additional image
             g.DrawString(
                 RepresentingField.Type + " " + RepresentingField.Name,
                 Font, new SolidBrush(PrimaryColor),

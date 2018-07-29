@@ -13,5 +13,7 @@ namespace UMLer.DiagramData
         string ReturnType { get; set; }
         IEnumerable<IField> Parameters { get; set; }
         IList<ExtraModifier> ExtraModifiers { get; set; }
+
+        string ParametersToSyntax();
     }
 }

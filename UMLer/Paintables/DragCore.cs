@@ -50,7 +50,7 @@ namespace UMLer.Paintables
             IsDragged = false;
         }
 
-        private void DragController(MouseEventArgs e)
+        protected virtual void DragController(MouseEventArgs e)
         {
 
             if (e.Button == MouseButtons.Left)
@@ -64,10 +64,15 @@ namespace UMLer.Paintables
 
                 var moveAmount = new Size(e.X - LatchPoint.X, e.Y - LatchPoint.Y);
                 if (IsDragValid(moveAmount))
-                    paintable.Location += moveAmount;
+                    DoMove(moveAmount);
                 LatchPoint = e.Location;
                 paintable.Parent.Invalidate();
             }
+        }
+
+        protected virtual void DoMove(Size moveAmount)
+        {
+            paintable.Location += moveAmount;
         }
 
         public void RaiseDraggingStarted(EventArgs a)

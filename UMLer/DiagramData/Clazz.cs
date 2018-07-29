@@ -64,7 +64,7 @@ namespace UMLer.DiagramData
             public IEnumerable<IField> Parameters { get; set; } = new List<Field>();
             public IList<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
-            private string ParamsToSyntax()
+            public string ParametersToSyntax()
             {
                 var builder = new StringBuilder();
                 bool first = true;
@@ -83,9 +83,10 @@ namespace UMLer.DiagramData
             {
                 return AccessModifier.ToString().ToLower() + ExtraModsToString(ExtraModifiers) + " " + ReturnType + " " + Name +
                     "(" +
-                    ParamsToSyntax()+
+                    ParametersToSyntax()+
                     ")";
             }
+
 
         }
         

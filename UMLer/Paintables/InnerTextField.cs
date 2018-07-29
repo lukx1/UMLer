@@ -12,7 +12,7 @@ using UMLer.Special;
 namespace UMLer.Paintables
 {
     [NoSerialize]
-    public class InnerTextField : CoreClass,IParentPaintable
+    public class InnerTextField : CoreClass,IParentPaintable,IDrag
     {
         private StringFormat _StringFormat= new StringFormat() { };
         public StringFormat StringFormat { get => _StringFormat; set
@@ -84,9 +84,13 @@ namespace UMLer.Paintables
 
         public delegate void TextWrittenHandler(object sender, TextWrittenArgs args);
         public event TextWrittenHandler TextWritten;
+        public event EventHandler DraggingStarted;
+        public event EventHandler DraggingStopped;
 
         private bool DidUserWrite = false;
         private string UnchangedText = "";
+
+        private ChainDragCore chainDragCore;
 
         public InnerTextField(IPaintable ParentPaintable) : base(true)
         {
@@ -99,6 +103,9 @@ namespace UMLer.Paintables
             FocusGained += (object o, EventArgs e) => UnchangedText = this.Text;
             FocusLost += (object o, EventArgs e) => { if (DidUserWrite) { TextWritten?.Invoke(this,new TextWrittenArgs(UnchangedText,Text));DidUserWrite = false; } };
             ParentPaintable.PropertyChanged += ParentPaintable_PropertyChanged;
+            chainDragCore = new ChainDragCore(this, _ParentPaintable);
+            chainDragCore.DraggingStarted += (object o, EventArgs a) => { DraggingStarted?.Invoke(this, new EventArgs()); };
+            chainDragCore.DraggingStopped += (object o, EventArgs a) => { DraggingStopped?.Invoke(this, new EventArgs()); };
         }
 
         private void ParentPaintable_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -156,5 +163,14 @@ namespace UMLer.Paintables
             return false;
         }
 
+        public void RaiseDraggingStarted(EventArgs a)
+        {
+            chainDragCore.RaiseDraggingStarted(a);
+        }
+
+        public void RaiseDraggingStopped(EventArgs a)
+        {
+            chainDragCore.RaiseDraggingStopped(a);
+        }
     }
 }

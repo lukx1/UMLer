@@ -65,11 +65,11 @@ namespace UMLer
 
         public static bool Deserializing = false;
         public static readonly double DistFromLinkClickAccept = 12.0;
-        public static float[] FocusDashPattern => new float[] { 4f, 2f };
+        public static float[] FocusDashPattern = new float[] { 4f, 2f };
         public static readonly int FocusDistanceFromBox = 10;
         public static readonly float FocusPenWidthMultiplier = 4f;
         public static readonly float PenDefaultWidth = 2f;
-        public static readonly int IconSize = 24;
+        public static readonly int ImageSize = 24;
 
         public static Color HighlightColor { get; set; } = Color.White;
 

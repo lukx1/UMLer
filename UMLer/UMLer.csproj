@@ -77,6 +77,7 @@
     </Compile>
     <Compile Include="Loading\Parsers\ILangParser.cs" />
     <Compile Include="Loading\Saver.cs" />
+    <Compile Include="Paintables\ChainDragCore.cs" />
     <Compile Include="Paintables\ClassITF.cs" />
     <Compile Include="Paintables\CoreClass.cs" />
     <Compile Include="Paintables\DiagramClass.cs" />
