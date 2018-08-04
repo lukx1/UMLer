@@ -43,6 +43,11 @@ namespace UMLer.Paintables
 
         public override void Paint(Graphics g)
         {
+            if (PaintBackground)
+            {
+                g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
+                g.DrawRectangle(Pens.Black, DisplayRectangle);
+            }
             if (this.IsFocused())
             {
                 base.Paint(g);
@@ -55,7 +60,7 @@ namespace UMLer.Paintables
 
         private void PaintClassSymbol(Graphics g)
         {
-            var drawLoc = this.Location;
+            var drawLoc = this.Location + new Size(2, 1);
             switch (RepresentingClass.ClassType)
             {
                 default:
@@ -76,13 +81,13 @@ namespace UMLer.Paintables
         {
             if (!RepresentingClass.ExtraModifiers.Contains(ExtraModifier.STATIC))
                 return;
-            var drawLoc = this.Location + new Size(Diagram.ImageSize, 0); // Next to class symbol
+            var drawLoc = this.Location + new Size(Diagram.ImageSize, 1); // Next to class symbol
             g.DrawImage(Properties.Resources.istatic, drawLoc);
         }
 
         private void PaintDisplayMode(Graphics g)
         {
-            g.DrawString(RepresentingClass.Name,Font, new SolidBrush(PrimaryColor), new RectangleF(Location.X, Location.Y, Size.Width, Size.Height), StringFormat);
+            g.DrawString(RepresentingClass.Name,new Font(Font,FontStyle.Bold), new SolidBrush(PrimaryColor), new RectangleF(Location.X, Location.Y, Size.Width, Size.Height), StringFormat);
             PaintClassSymbol(g);
             PaintStaticSymbol(g);
         }

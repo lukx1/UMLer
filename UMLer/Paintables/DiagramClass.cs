@@ -27,6 +27,8 @@ namespace UMLer.Paintables
         private const int HEADER_PADDING = 6;
         private const int LINE_VERT_SEP = 3;
 
+        private const int FIELD_HEIGHT_INC = 10;
+
         private Rectangle HeaderRect = new Rectangle();
         private Rectangle FieldRect = new Rectangle();
         private Rectangle MethodRect = new Rectangle();
@@ -84,12 +86,13 @@ namespace UMLer.Paintables
         {
             var headerTextSize = g.MeasureString(RepresentingClass.Name, Font);
             var headerWidth = DisplayRectangle.Width;
-            var headerHeight = Font.Height + HEADER_PADDING * 2;
+            var headerHeight = Font.Height + FIELD_HEIGHT_INC + HEADER_PADDING * 2;
             if (headerTextSize.Width > DisplayRectangle.Width)
             {
                 headerHeight += (int)((Font.Height + LINE_VERT_SEP) * (headerTextSize.Width / MAX_WIDTH));
             }
             HeaderRect = new Rectangle(Location.X, Location.Y, (int)headerWidth, headerHeight);
+            
             if (HeaderField == null)
             {
                 HeaderField = new ClassITF(this,RepresentingClass);
@@ -113,7 +116,8 @@ namespace UMLer.Paintables
             innerTextField.SecondaryColor = this.SecondaryColor;
             innerTextField.BackgroundColor = this.BackgroundColor;
             innerTextField.Parent = this.Parent;
-            innerTextField.ZIndex = 1;
+            innerTextField.ZIndex = this.ZIndex+1;
+            innerTextField.PaintBackground = true;
             innerTextField.StringFormat = new StringFormat()
             {
                 Alignment = StringAlignment.Center,
@@ -125,8 +129,9 @@ namespace UMLer.Paintables
 
         private void CalculateFields()
         {
-            var fieldsHeight = RepresentingClass.Fields.Count() * (Font.Height + LINE_VERT_SEP);
-            var fieldHeight = Font.Height + LINE_VERT_SEP;
+            var fieldHeight = Font.Height + FIELD_HEIGHT_INC + LINE_VERT_SEP;
+            var fieldsHeight = RepresentingClass.Fields.Count() * fieldHeight;
+            
             FieldRect = new Rectangle(HeaderRect.Location,new Size(HeaderRect.X,fieldsHeight));
             if (RepresentingClass.Fields.Count() > 0 && Fields.Count() == 0) // Rep fields exist but aren't drawn yet
             {
@@ -137,10 +142,14 @@ namespace UMLer.Paintables
                     field.Name = RepresentingClass.Fields[i].Name;
                     field.PaintBackground = true;
                     field.Text = RepresentingClass.Fields[i].ToSyntax();
-                    field.BackgroundColor = Color.Red;
+                    field.BackgroundColor = Color.White;
                     MakeStandardITF(field);
                     field.Location = new Point(DisplayRectangle.X, startY + fieldHeight * i);
                     field.Size = new Size(DisplayRectangle.Width, fieldHeight);
+                    if(i == RepresentingClass.Fields.Count() - 1) // Last field
+                    {
+                        field.LastField = true;
+                    }
                     Fields.Add(field);
                     lock (lockObj)
                     {
@@ -162,8 +171,9 @@ namespace UMLer.Paintables
 
         private void CalculateMethods()
         {
-            var methodsHeight = RepresentingClass.Methods.Count() * (Font.Height + LINE_VERT_SEP);
-            var methodHeight = Font.Height + LINE_VERT_SEP;
+            var methodHeight = Font.Height + FIELD_HEIGHT_INC + LINE_VERT_SEP;
+            var methodsHeight = RepresentingClass.Methods.Count() * methodHeight;
+            
             MethodRect = new Rectangle(HeaderRect.Location,new Size(HeaderRect.X,methodsHeight));
             if (RepresentingClass.Methods.Count() > 0 && Methods.Count() == 0) // Rep fields exist but aren't drawn yet
             {
@@ -174,7 +184,7 @@ namespace UMLer.Paintables
                     methoditf.Name = RepresentingClass.Methods[i].Name;
                     methoditf.PaintBackground = true;
                     methoditf.Text = RepresentingClass.Methods[i].ToSyntax();
-                    methoditf.BackgroundColor = Color.Red;
+                    methoditf.BackgroundColor = Color.White;
                     MakeStandardITF(methoditf);
                     methoditf.Location = new Point(DisplayRectangle.X, startY + methodHeight * i);
                     methoditf.Size = new Size(DisplayRectangle.Width, methodHeight);
@@ -199,6 +209,7 @@ namespace UMLer.Paintables
 
         private void CalculatePainting(Graphics g)
         {
+
             CalculateHeader(g);
             CalculateFields();
             CalculateMethods();
@@ -212,11 +223,11 @@ namespace UMLer.Paintables
                 CalculatePainting(g);
                 RecalcPaint = false;
             }
-            g.FillRectangle(new SolidBrush(SecondaryColor), HeaderRect);
+            
         }
 
         public override void Paint(Graphics g)
-        {
+        {     
             PaintAll(g);
         }
     }

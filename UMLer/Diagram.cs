@@ -71,7 +71,7 @@ namespace UMLer
         public static readonly float PenDefaultWidth = 2f;
         public static readonly int ImageSize = 24;
 
-        public static Color HighlightColor { get; set; } = Color.White;
+        public static Color HighlightColor { get; set; } = Color.Cyan;
 
         public Diagram()
         {

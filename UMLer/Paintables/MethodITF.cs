@@ -23,6 +23,11 @@ namespace UMLer.Paintables
 
         public override void Paint(Graphics g)
         {
+            if (PaintBackground)
+            {
+                g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
+                g.DrawRectangle(Pens.Black, DisplayRectangle);
+            }
             if (this.IsFocused())
             {
                 base.Paint(g);
@@ -35,7 +40,7 @@ namespace UMLer.Paintables
 
         private void PaintAccessMod(Graphics g)
         {
-            var drawLoc = this.Location;
+            var drawLoc = this.Location + new Size(2,1);
             switch (RepresentingMethod.AccessModifier)
             {
                 default:
@@ -55,7 +60,7 @@ namespace UMLer.Paintables
         private void PaintExtras(Graphics g)
         {
             int offset = Diagram.ImageSize;
-            var yLoc = this.Location.Y;
+            var yLoc = this.Location.Y+1;
             if (RepresentingMethod.ExtraModifiers.Contains(ExtraModifier.ABSTRACT))
             {
                 g.DrawImage(Properties.Resources.iabstract, new Point(offset, yLoc));

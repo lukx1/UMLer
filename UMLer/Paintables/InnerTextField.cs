@@ -15,6 +15,7 @@ namespace UMLer.Paintables
     public class InnerTextField : CoreClass,IParentPaintable,IDrag
     {
         private StringFormat _StringFormat= new StringFormat() { };
+        [Browsable(false)]
         public StringFormat StringFormat { get => _StringFormat; set
             {
                 _StringFormat = value;
@@ -22,6 +23,7 @@ namespace UMLer.Paintables
             } }
 
         private string _Text = "";
+        [Category("Inner text")]
         public virtual string Text { get => _Text; set {
                 if(value == null)
                 {
@@ -31,6 +33,7 @@ namespace UMLer.Paintables
                 RaisePropertyChanged("Text");
             } }
         private bool _PaintBackground = false;
+        [Browsable(false)]
         public virtual bool PaintBackground
         {
             get => _PaintBackground;
@@ -64,9 +67,13 @@ namespace UMLer.Paintables
         [Browsable(false)]
         public override int Width { get => base.Width; set => base.Width = value; }
 
+        [Category("Design")]
         public override Color PrimaryColor { get => ParentPaintable.PrimaryColor; set => ParentPaintable.PrimaryColor = value; }
+        [Category("Design")]
         public override Color SecondaryColor { get => ParentPaintable.SecondaryColor; set => ParentPaintable.SecondaryColor = value; }
+        [Category("Design")]
         public override Color BackgroundColor { get => ParentPaintable.BackgroundColor; set => ParentPaintable.BackgroundColor = value; }
+        [Category("Design")]
         public override Font Font { get => ParentPaintable.Font; set => ParentPaintable.Font = value; }
 
         public class TextWrittenArgs : EventArgs

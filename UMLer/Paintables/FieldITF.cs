@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,8 @@ namespace UMLer.Paintables
         public override string Text { get => base.Text; set => base.Text = value; }
         private IField RepresentingField;
         private ClazzHelper helper = new ClazzHelper();
+        [Browsable(false)]
+        public bool LastField { get; set; } = false;
 
         public FieldITF(IPaintable ParentPaintable,IField RepresentingField) : base(ParentPaintable)
         {
@@ -24,6 +27,15 @@ namespace UMLer.Paintables
 
         public override void Paint(Graphics g)
         {
+            if (PaintBackground)
+            {
+                g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
+                g.DrawRectangle(Pens.Black, DisplayRectangle);
+                if (LastField)
+                {
+                    g.DrawLine(Pens.Black, this.Location + new Size(0, this.Size.Height - 2), this.Location + new Size(this.Size.Width, this.Size.Height - 2));
+                }
+            }
             if (this.IsFocused())
             {
                 base.Paint(g);
@@ -36,7 +48,7 @@ namespace UMLer.Paintables
 
         private void PaintAccessMod(Graphics g)
         {
-            var drawLoc = this.Location;
+            var drawLoc = this.Location + new Size(2, 1);
             switch (RepresentingField.AccessModifier)
             {
                 default:
@@ -56,7 +68,7 @@ namespace UMLer.Paintables
         private void PaintExtras(Graphics g)
         {
             int offset = Diagram.ImageSize;
-            var yLoc = this.Location.Y;
+            var yLoc = this.Location.Y + 1;
             if (RepresentingField.ExtraModifiers.Contains(ExtraModifier.ABSTRACT))
             {
                 g.DrawImage(Properties.Resources.iabstract, new Point(offset, yLoc));
