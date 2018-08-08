@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UMLer.Special;
+using static UMLer.DiagramData.Clazz;
 
 namespace UMLer.DiagramData
 {
@@ -122,9 +123,9 @@ namespace UMLer.DiagramData
             throw new ParseException("Cannot parse access modifier");
         }
 
-        public IMethod MakeMethodFromSyntax(string s)
+        public Clazz.Method MakeMethodFromSyntax(string s)
         {
-            IMethod method = new Clazz.Method();
+            Clazz.Method method = new Clazz.Method();
             var su = s.ToUpper();
             if (su.Contains("STATIC"))
                 method.ExtraModifiers.Add(ExtraModifier.STATIC);
@@ -149,7 +150,7 @@ namespace UMLer.DiagramData
             }
             var oPIndex = s.IndexOf('(');
             var cPIndex = s.IndexOf(')');
-            method.Parameters = ParseParamsInsideMethod(s.Substring(oPIndex+1, cPIndex - oPIndex-1));
+            method.Parameters = ParseParamsInsideMethod(s.Substring(oPIndex+1, cPIndex - oPIndex-1)).ToList();
             return method;
         }
         /// <summary>
@@ -157,9 +158,9 @@ namespace UMLer.DiagramData
         /// </summary>
         /// <param name="s">Everything between (), parentheses not included</param>
         /// <returns></returns>
-        private IEnumerable<IField> ParseParamsInsideMethod(string s)
+        private List<Field> ParseParamsInsideMethod(string s)
         {
-            List<IField> fields = new List<IField>();
+            List<Field> fields = new List<Field>();
             foreach (var part in s.Split(','))
             {
                 var pT = part.Trim();
@@ -176,9 +177,9 @@ namespace UMLer.DiagramData
             return fields;
         }
 
-        public IField MakeFieldFromSyntax(string s)
+        public Field MakeFieldFromSyntax(string s)
         {
-            IField field = new Clazz.Field();
+            Field field = new Clazz.Field();
             if (Regex.IsMatch(s, FieldSyntaxRegXBest, RegexOptions.IgnoreCase))
             {
                 var parts = s.Split(' ');

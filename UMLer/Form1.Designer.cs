@@ -33,6 +33,7 @@ namespace UMLer
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.PropertiesPanel = new System.Windows.Forms.Panel();
+            this.elementPanel1 = new UMLer.Controls.ElementPanel();
             this.propertyGrid = new System.Windows.Forms.PropertyGrid();
             this.ToolsPanel = new System.Windows.Forms.Panel();
             this.labelSSave = new System.Windows.Forms.Label();
@@ -62,20 +63,29 @@ namespace UMLer
             // 
             // PropertiesPanel
             // 
+            this.PropertiesPanel.AutoSize = true;
             this.PropertiesPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PropertiesPanel.Controls.Add(this.elementPanel1);
             this.PropertiesPanel.Controls.Add(this.propertyGrid);
-            this.PropertiesPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PropertiesPanel.Location = new System.Drawing.Point(0, 100);
             this.PropertiesPanel.Name = "PropertiesPanel";
-            this.PropertiesPanel.Size = new System.Drawing.Size(200, 649);
+            this.PropertiesPanel.Size = new System.Drawing.Size(205, 649);
             this.PropertiesPanel.TabIndex = 1;
+            // 
+            // elementPanel1
+            // 
+            this.elementPanel1.Diagram = null;
+            this.elementPanel1.Location = new System.Drawing.Point(190, 23);
+            this.elementPanel1.Name = "elementPanel1";
+            this.elementPanel1.Size = new System.Drawing.Size(8, 8);
+            this.elementPanel1.TabIndex = 1;
             // 
             // propertyGrid
             // 
             this.propertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid.Name = "propertyGrid";
-            this.propertyGrid.Size = new System.Drawing.Size(196, 645);
+            this.propertyGrid.Size = new System.Drawing.Size(201, 645);
             this.propertyGrid.TabIndex = 0;
             // 
             // ToolsPanel
@@ -105,7 +115,6 @@ namespace UMLer
             // 
             // button2
             // 
-            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(103, 23);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
@@ -116,7 +125,6 @@ namespace UMLer
             // 
             // button1
             // 
-            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(56, 69);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
@@ -198,10 +206,12 @@ namespace UMLer
             this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.PropertiesPanel.ResumeLayout(false);
             this.ToolsPanel.ResumeLayout(false);
             this.ToolsPanel.PerformLayout();
@@ -226,6 +236,7 @@ namespace UMLer
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label labelSSave;
+        private ElementPanel elementPanel1;
     }
 }
 

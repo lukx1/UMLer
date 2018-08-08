@@ -22,6 +22,7 @@ namespace UMLer.Paintables
                 StartID = value.ID;
                 RaisePropertyChanged("Start");
             } }
+        [ReadOnly(true)]
         public int StartID { get; set; }
 
         [Browsable(false)]
@@ -33,6 +34,7 @@ namespace UMLer.Paintables
                 RaisePropertyChanged("Finish");
             } }
 
+        [ReadOnly(true)]
         public int FinishID { get; set; }
 
         public float LineWidth { get => LinkPainter.LineWidth; set
@@ -105,8 +107,10 @@ namespace UMLer.Paintables
             }
         }
 
+        [Browsable(false)]
         public double AngleStart { get; set; } = 0;
 
+        [Browsable(false)]
         public double AngleFinish { get; set; } = 0;
 
         public override bool Contains(Point p)

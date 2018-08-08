@@ -96,7 +96,7 @@ namespace UMLer.Paintables
 
         public virtual void Regenerate() { }
 
-        public bool IsFocused() => this == Parent.FocusedElement;
+        public bool IsFocused() => Parent != null && this == Parent.FocusedElement;
 
 
 

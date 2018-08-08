@@ -11,8 +11,8 @@ namespace UMLer.DiagramData
         AccessModifier AccessModifier { get; set; }
         string Name { get; set; }
         string ReturnType { get; set; }
-        IEnumerable<IField> Parameters { get; set; }
-        IList<ExtraModifier> ExtraModifiers { get; set; }
+        List<Clazz.Field> Parameters { get; set; }
+        List<ExtraModifier> ExtraModifiers { get; set; }
 
         string ParametersToSyntax();
     }

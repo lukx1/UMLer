@@ -17,12 +17,13 @@ using UMLer.Loading;
 using UMLer.Paintables;
 using UMLer.Special;
 using UMLer.Tools;
+using static UMLer.DiagramData.Clazz;
 
 namespace UMLer
 {
     public partial class Form1 : Form
     {
-
+        private ModLoader ModLoader = new ModLoader();
         private Diagram diagram = new Diagram();
 
        /* private static Clazz CreateTestClass()
@@ -79,17 +80,17 @@ namespace UMLer
         private static Clazz CreateTestClass()
         {
             ClazzHelper helper = new ClazzHelper();
-            IMethod test0 = helper.MakeMethodFromSyntax("private int X(int Y, bool b)");
-            IMethod test1 = helper.MakeMethodFromSyntax("private bool Y(int Y, Helper boom)");
-            IMethod test2 = helper.MakeMethodFromSyntax("private Dog X(int Y, bool b)");
-            IField field0 = helper.MakeFieldFromSyntax("public int Jooo");
-            IField field1 = helper.MakeFieldFromSyntax("public string Name");
-            IField field2 = helper.MakeFieldFromSyntax("protected Dog Pet");
+            Method test0 = helper.MakeMethodFromSyntax("private int X(int Y, bool b)");
+            Method test1 = helper.MakeMethodFromSyntax("private bool Y(int Y, Helper boom)");
+            Method test2 = helper.MakeMethodFromSyntax("private Dog X(int Y, bool b)");
+            Field field0 = helper.MakeFieldFromSyntax("public int Jooo");
+            Field field1 = helper.MakeFieldFromSyntax("public string Name");
+            Field field2 = helper.MakeFieldFromSyntax("protected Dog Pet");
             return new Clazz()
             {
                 Name = "TestClass",
-                Methods = new List<IMethod>() {test0,test1,test2 },
-                Fields = new List<IField>() { field0,field2,field1}
+                Methods = new List<Method>() {test0,test1,test2 },
+                Fields = new List<Field>() { field0,field2,field1}
             }
             ;
         }
@@ -100,7 +101,8 @@ namespace UMLer
             var e2 = new LargeClass(ElementPanel) { Location = new Point(500, 100) };
             ElementPanel.Paintables.Add(e1);
             ElementPanel.Paintables.Add(e2);
-            ElementPanel.Paintables.Add(new Link(e1, e2));
+            ElementPanel.Paintables.Add(new Comment(ElementPanel) { Location = new Point(500, 100), Size = new Size(100, 100) });
+            ElementPanel.Paintables.Add(new Link(e1, e2) {BendStyle = Paintables.LinkPainters.BendStyle.FORTY_FIVE,LinkTypeFinish = Paintables.LinkPainters.LinkType.AGGREGATION,LinkTypeStart = Paintables.LinkPainters.LinkType.AGGREGATION });
             ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
             ElementPanel.Paintables.Add(new DiagramClass() { Parent = ElementPanel,Location = new Point(300,300), Size = new Size(100,100),RepresentingClass = CreateTestClass()});
             //ElementPanel.Paintables.Add(new InnerTextField() { Location = new Point(300,300),Size = new Size(100,13),Parent = ElementPanel});
@@ -120,6 +122,7 @@ namespace UMLer
 
         private void Init()
         {
+            diagram.Mods = ModLoader.Mods;
             diagram.BindProperty(propertyGrid);
             diagram.BindStatusLabel(labelStatus);
             diagram.BindElementPanel(ElementPanel);
@@ -132,10 +135,35 @@ namespace UMLer
 
         }
 
+        private void LoadMods()
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                var modsDir = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Mods");
+                ModLoader.LoadMods(modsDir);
+            }
+            else
+            {
+                ModLoader.LoadMods(Path.Combine(Directory.GetCurrentDirectory(), "mods"));
+            }
+            try
+            {
+                ModLoader.AppStarting();
+            }
+            catch(TimeoutException e)
+            {
+                MessageBox.Show(this, e.Message, "Mod load error");
+            }
+        }
+
         public Form1()
         {
+            LoadMods();
             InitializeComponent();
             Init();
+
+            ModLoader.EnvironmentLoaded(diagram);
+
             TestBoot();
             //this.Controls.Add(new InvisTextBox() {Location = new Point(200,200),Size = new Size(100,10) });
             //LoadBoot();
@@ -230,6 +258,11 @@ namespace UMLer
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
             ElementPanel.KeyUpE(e);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ModLoader.AppShuttingDown();
         }
     }
 }

@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,10 +78,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Loading\DoSerialize.cs" />
     <Compile Include="Loading\Parsers\ILangParser.cs" />
     <Compile Include="Loading\Saver.cs" />
     <Compile Include="Paintables\ChainDragCore.cs" />
     <Compile Include="Paintables\ClassITF.cs" />
+    <Compile Include="Paintables\Comment.cs" />
     <Compile Include="Paintables\CoreClass.cs" />
     <Compile Include="Paintables\DiagramClass.cs" />
     <Compile Include="Paintables\DragCore.cs" />
@@ -115,6 +120,8 @@
     <Compile Include="Special\IncludeInToolBoxAttribute.cs" />
     <Compile Include="Special\IPantable.cs" />
     <Compile Include="Special\LinkMath.cs" />
+    <Compile Include="Special\ModCore.cs" />
+    <Compile Include="Special\ModLoader.cs" />
     <Compile Include="Special\NoSerializeAttribute.cs" />
     <Compile Include="Special\ParseException.cs" />
     <Compile Include="Special\SerializeableKeyValue.cs" />
@@ -150,6 +157,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Mods\" />
     <Folder Include="System\Windows\Forms\" />
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,13 @@ namespace UMLer.Loading
                 .Where(p => type.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract) // Non abstract classes
                 .Where(p => p.GetCustomAttributes(typeof(NoSerializeAttribute), true).Length == 0)//No NoSerialize
                 ;
-            return types.ToArray();
+            var type2 = typeof(DoSerialize);
+            var types2 = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes()) // All that are IPaintable
+                .Where(p => type2.IsAssignableFrom(p) && p.IsClass && !p.IsAbstract) // Non abstract classes
+                .Where(p => p.GetCustomAttributes(typeof(NoSerializeAttribute), true).Length == 0)//No NoSerialize
+                ;
+            return types.Concat(types2).ToArray();
         }
 
         static Saver()

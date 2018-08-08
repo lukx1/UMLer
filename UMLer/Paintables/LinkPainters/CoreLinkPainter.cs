@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,14 @@ namespace UMLer.Paintables.LinkPainters
 {
     public abstract class CoreLinkPainter : ILinkPainter
     {
+        [Browsable(false)]
         public IPaintable Start { get; set; }
+        [Browsable(false)]
         public IPaintable Finish { get; set; }
         public float LineWidth { get; set; } = 1f;
         public Pen Pen { get; set; } = new Pen(new SolidBrush(Color.Black),1);
         public virtual Pen FocusOutlinePen { get; set; } = new Pen(new SolidBrush(Color.Black), 1);
+        [Browsable(false)]
         public IPaintable Supervisor { get; set; }
         public Color Color { get => Pen.Color; set {
                 if(Pen != null)

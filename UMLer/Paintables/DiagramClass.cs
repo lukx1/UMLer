@@ -52,8 +52,8 @@ namespace UMLer.Paintables
 
         private object lockObj = new object();
 
-        private IList<InnerTextField> Methods = new List<InnerTextField>();
-        private IList<InnerTextField> Fields = new List<InnerTextField>();
+        private List<InnerTextField> Methods = new List<InnerTextField>();
+        private List<InnerTextField> Fields = new List<InnerTextField>();
 
         private IEnumerable<InnerTextField> ValidTFS
         {

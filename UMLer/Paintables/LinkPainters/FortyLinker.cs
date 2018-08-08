@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,9 @@ namespace UMLer.Paintables.LinkPainters
 {
     public class FortyLinker<T> : CoreLinkPainter where T : ILink, IPaintable
     {
+        [Browsable(false)]
         public override Point ConnectionStart { get; set; }
+        [Browsable(false)]
         public override Point ConnectionFinish { get; set; }
         private const double LineSwapThreshold = 20;
         private Point midPointS;
@@ -53,10 +56,23 @@ namespace UMLer.Paintables.LinkPainters
         private void CalculateLine()
         {
             var conPoints = FindClosestPointsOnSides();
-            ConnectionStart = conPoints[0];
-            ConnectionFinish = conPoints[1];
-            midPointS = new Point(ConnectionStart.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
-            midPointF = new Point(ConnectionFinish.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
+            ConnectionStart = conPoints.A;
+            ConnectionFinish = conPoints.B;
+            if (conPoints.IsAbove)
+            {
+                midPointS = new Point(ConnectionStart.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
+                midPointF = new Point(ConnectionFinish.X, (ConnectionStart.Y + ConnectionFinish.Y) / 2);
+            }
+            else if (conPoints.IsNextTo)
+            {
+                midPointS = new Point((ConnectionStart.X+ConnectionFinish.X)/2, ConnectionStart.Y);
+                midPointF = new Point((ConnectionStart.X + ConnectionFinish.X) / 2, ConnectionFinish.Y);
+            }
+            else
+            {
+                midPointS = new Point(ConnectionStart.X, ConnectionFinish.Y);
+                midPointF = midPointS;
+            }
         }
 
         private void Supervisor_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -112,7 +128,7 @@ namespace UMLer.Paintables.LinkPainters
         /// those sides
         /// </summary>
         /// <returns>Closest points on sides of rectangles</returns>
-        private Point[] FindClosestPointsOnSides()
+        private ClosestPoints FindClosestPointsOnSides()
         {
             var pts = new Point[8];
             for (int i = 0; i < 8; i++)
@@ -151,7 +167,25 @@ namespace UMLer.Paintables.LinkPainters
                 }
             }
             SetAngles(bestPtA, bestPtB, pts);
-            return new Point[2] { bestPtA, bestPtB };
+            int indexA = pts.ToList().IndexOf(bestPtA);
+            int indexB = pts.ToList().IndexOf(bestPtB);
+            return 
+                new ClosestPoints()
+                {
+                    A = bestPtA,
+                    B = bestPtB,
+                    IsAbove = indexA+indexB == 8,
+                    IsNextTo = indexA+indexB == 6
+                };
+           
+        }
+
+        private struct ClosestPoints
+        {
+            public Point A;
+            public Point B;
+            public bool IsAbove;
+            public bool IsNextTo;
         }
 
         private double Distance(Point a, Point b)

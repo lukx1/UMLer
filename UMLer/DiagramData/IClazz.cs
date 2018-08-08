@@ -12,8 +12,8 @@ namespace UMLer.DiagramData
         AccessModifier AccessModifier { get; set; }
         ClassType ClassType { get; set; }
         string Name { get; set; }
-        IList<IMethod> Methods { get; set; }
-        IList<IField> Fields { get; set; }
-        IList<ExtraModifier> ExtraModifiers { get; set; }
+        List<Clazz.Method> Methods { get; set; }
+        List<Clazz.Field> Fields { get; set; }
+        List<ExtraModifier> ExtraModifiers { get; set; }
     }
 }

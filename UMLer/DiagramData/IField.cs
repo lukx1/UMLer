@@ -11,6 +11,6 @@ namespace UMLer.DiagramData
         AccessModifier AccessModifier { get; set; }
         string Name { get; set; }
         string Type { get; set; }
-        IList<ExtraModifier> ExtraModifiers { get; set; }
+        List<ExtraModifier> ExtraModifiers { get; set; }
     }
 }

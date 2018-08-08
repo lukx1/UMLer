@@ -4,21 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using UMLer.Loading;
 
 namespace UMLer.DiagramData
 {
-    public class Clazz : IClazz
+    public class Clazz : IClazz, DoSerialize
     {
         public Language Language { get; set; } = Language.CSHARP;
         public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
         public ClassType ClassType { get; set; } = ClassType.CLASS;
         public string Name { get; set; }
-        [XmlIgnore]
-        public IList<IMethod> Methods { get; set; } = new List<IMethod>();
-        [XmlIgnore]
-        public IList<IField> Fields { get; set; } = new List<IField>();
-        [XmlIgnore]
-        public IList<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
+        public List<Method> Methods { get; set; } = new List<Method>();
+        public List<Field> Fields { get; set; } = new List<Field>();
+        public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
         public static readonly Clazz Empty = new Clazz();
 
@@ -48,7 +46,7 @@ namespace UMLer.DiagramData
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
             public string Name { get; set; }
             public string Type { get; set; }
-            public IList<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
+            public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
             public string ToSyntax()
             {
@@ -61,8 +59,8 @@ namespace UMLer.DiagramData
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
             public string Name { get; set; }
             public string ReturnType { get; set; }
-            public IEnumerable<IField> Parameters { get; set; } = new List<Field>();
-            public IList<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
+            public List<Field> Parameters { get; set; } = new List<Field>();
+            public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
             public string ParametersToSyntax()
             {
@@ -92,11 +90,11 @@ namespace UMLer.DiagramData
         
         #region serialization
 
-        public List<SerField> SerFields { get => ToSerFields(); set => FromSerFields(value); }
-        public List<SerMethod> SerMethods { get => ToSerMethods(); set => FromSerMethods(value); }
-        public List<ExtraModifier> SerExtraModifiers { get => ExtraModifiers.ToList(); set => ExtraModifiers = value.ToList(); }
+        //public List<SerField> SerFields { get => ToSerFields(); set=> throw null; }
+        //public List<SerMethod> SerMethods { get => ToSerMethods(); set => FromSerMethods(value); }
+        //public List<ExtraModifier> SerExtraModifiers { get => ExtraModifiers.ToList(); set => ExtraModifiers = value.ToList(); }
 
-        public class SerField
+        public class SerField : DoSerialize
         {
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
             public string Name { get; set; }
@@ -137,7 +135,7 @@ namespace UMLer.DiagramData
             return sfl;
         }
 
-        private void FromSerFields(List<SerField> serFields)
+       /* private void FromSerFields(List<SerField> serFields)
         {
             this.Fields.Clear();
             serFields.ForEach(r => Fields.Add(r.ToIField()));
@@ -157,9 +155,9 @@ namespace UMLer.DiagramData
         {
             this.Methods.Clear();
             serMethods.ForEach(r => Methods.Add(r.ToIMethod()));
-        }
+        }*/
 
-        public class SerMethod
+        public class SerMethod : DoSerialize
         {
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
             public string Name { get; set; }

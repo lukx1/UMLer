@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UMLer.Controls;
+using UMLer.Special;
 using UMLer.Tools;
 
 namespace UMLer
@@ -43,6 +44,7 @@ namespace UMLer
         private Label StatusLabel;
         private PropertyGrid propertyGrid;
         private ElementPanel elementPanel;
+        public ISet<ModCore> Mods = new HashSet<ModCore>();
 
         public static int GenerateID()
         {
