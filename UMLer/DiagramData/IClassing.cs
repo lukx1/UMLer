@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace UMLer.DiagramData
 {
-    public enum AccessModifier
+    public interface IClassing
     {
-        PUBLIC,
-        PROTECTED,
-        PRIVATE,
-        NONE
+        Clazz RepresentingClass { get; set; }
     }
 }

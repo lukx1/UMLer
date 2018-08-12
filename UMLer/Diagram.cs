@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UMLer.Controls;
+using UMLer.DiagramData;
+using UMLer.Paintables;
 using UMLer.Special;
 using UMLer.Tools;
 
@@ -74,6 +76,35 @@ namespace UMLer
         public static readonly int ImageSize = 24;
 
         public static Color HighlightColor { get; set; } = Color.Cyan;
+
+        public List<Clazz> PullAllClazzes()
+        {
+            List<Clazz> res = new List<Clazz>();
+            foreach (var dc in ElementPanel.Paintables.OfType<DiagramClass>())
+            {
+                res.Add(dc.RepresentingClass);
+            }
+            return res;
+        }
+
+        public List<ClazzLink> PullAllLinks()
+        {
+            var validLinks = new List<ClazzLink>();
+            var links = ElementPanel.Paintables.OfType<ILink>();
+            foreach (var link in links)
+            {
+                if (!(link.Finish is IClassing) || !(link.Start is IClassing))
+                    continue;
+                validLinks.Add(new ClazzLink()
+                {
+                    Start = ((IClassing)link.Start).RepresentingClass,
+                    Finish = ((IClassing)link.Finish).RepresentingClass,
+                    LinkStart = link.LinkTypeStart,
+                    LinkFinish = link.LinkTypeFinish
+                });
+            }
+            return validLinks;
+        }
 
         public Diagram()
         {

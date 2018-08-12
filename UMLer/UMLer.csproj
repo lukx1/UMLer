@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coder\CSharpCoder.cs" />
+    <Compile Include="Coder\ICoder.cs" />
     <Compile Include="Controls\ElementPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -66,7 +68,9 @@
     <Compile Include="DiagramData\ClassType.cs" />
     <Compile Include="DiagramData\Clazz.cs" />
     <Compile Include="DiagramData\ClazzHelper.cs" />
+    <Compile Include="DiagramData\ClazzLink.cs" />
     <Compile Include="DiagramData\ExtraModifier.cs" />
+    <Compile Include="DiagramData\IClassing.cs" />
     <Compile Include="DiagramData\IClazz.cs" />
     <Compile Include="DiagramData\IField.cs" />
     <Compile Include="DiagramData\IMethod.cs" />

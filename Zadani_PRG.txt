@@ -1,0 +1,58 @@
+UML Editor
+
+Primární důraz na User Interface. Design, použitelnost a přívětivost // Extrémní důraz
+
+==UML Diagram==
+
+UML Diagram, spousta typů, hlavní je Class diagram.
+- Dokumentace
+- Návrh
+
+Class Diagram
+
+-----------------
+|      USER     | // Jmeno classy
+|---------------|
+|+ Name : string| // Vlastosti ([+] public, jmeno a pak za ":" je datatyp)
+|               |
+|---------------|
+|+ Get():string | // Metoda, Encapsulace, vlastnosti a return typ
+|+ Set(int):void|
+-----------------
+
+Abstraktní metoda kurzívou
+Statický podtržený
+
+-------|> dědičnost
+- - - -|> implementace
+
+Associace // třeba když user má v sobě vlastnost objektu "charakter"         USER 0.. ----> 1 CHARAKTER
+                                    když i charakter má v sobě user          USER     <--->   CHARAKTER
+
+Podobný Associace -> ten jeden objekt se skládá s jiného, ten jiný objekt neexistuje bez toho prvního.
+---<> Aggregace
+---<> (ale vyplněný černou) Composice
+
+pokud může ten hlavní objekt fungovat bez toho druhého tak je to Aggregace, jestli ne, tak Composice
+
+- - - -> Dependence (závislost) // když nějaká classa závisí na druhé, jakýmkoliv způsobem závisí
+								// nefungovala by bez ní
+								
+Stereotyp, taková informace co se dá dát ke všemu. Není standardizovaný
+
+-----------------
+| <<Interface>> | // Stereotyp
+|      USER     | // Jmeno classy
+|---------------|
+|+ Name : string| // Vlastosti ([+] public, jmeno a pak za ":" je datatyp)
+|               |
+|---------------|
+|+ Get():string | // Metoda, Encapsulace, vlastnosti a return typ
+|+ Set(int):void|
+-----------------
+
+Umět pracovat s diagramem, umět uložit a načíst
+Vyexportovat JPG, PNG
+
+Vygenerovat kód v C#, PHP, Java
+

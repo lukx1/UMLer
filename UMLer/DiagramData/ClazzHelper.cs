@@ -51,7 +51,7 @@ namespace UMLer.DiagramData
                 access = AccessModifier.PROTECTED;
             else
             {
-                access = AccessModifier.ERR;//Required line
+                access = AccessModifier.PUBLIC;//Required line
                 return false;
             }
             return true;

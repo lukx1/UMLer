@@ -9,7 +9,7 @@ using UMLer.DiagramData;
 namespace UMLer.Paintables
 {
     [Serializable]
-    public class DiagramClass : DraggableCoreClass
+    public class DiagramClass : DraggableCoreClass,IClassing
     {
         private Clazz _RepresentingClass = Clazz.Empty;
         public Clazz RepresentingClass
