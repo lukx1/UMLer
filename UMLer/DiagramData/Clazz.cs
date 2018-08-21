@@ -8,6 +8,7 @@ using UMLer.Loading;
 
 namespace UMLer.DiagramData
 {
+    [Serializable]
     public class Clazz : IClazz, DoSerialize
     {
         public Language Language { get; set; } = Language.CSHARP;
@@ -18,7 +19,10 @@ namespace UMLer.DiagramData
         public List<Field> Fields { get; set; } = new List<Field>();
         public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
-        public static readonly Clazz Empty = new Clazz();
+        public static Clazz CreateEmpty()
+        {
+            return new Clazz();
+        }
 
         public string ToSyntax()
         {
@@ -41,6 +45,7 @@ namespace UMLer.DiagramData
             return builder.ToString();
         }
 
+        [Serializable]
         public class Field : IField
         {
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
@@ -54,6 +59,7 @@ namespace UMLer.DiagramData
             }
         }
 
+        [Serializable]
         public class Method : IMethod
         {
             public AccessModifier AccessModifier { get; set; } = AccessModifier.PUBLIC;
@@ -134,28 +140,6 @@ namespace UMLer.DiagramData
             }
             return sfl;
         }
-
-       /* private void FromSerFields(List<SerField> serFields)
-        {
-            this.Fields.Clear();
-            serFields.ForEach(r => Fields.Add(r.ToIField()));
-        }
-
-        private List<SerMethod> ToSerMethods()
-        {
-            var sml = new List<SerMethod>();
-            foreach (var m in Methods)
-            {
-                sml.Add(SerMethod.FromIMethod(m));
-            }
-            return sml;
-        }
-
-        private void FromSerMethods(List<SerMethod> serMethods)
-        {
-            this.Methods.Clear();
-            serMethods.ForEach(r => Methods.Add(r.ToIMethod()));
-        }*/
 
         public class SerMethod : DoSerialize
         {

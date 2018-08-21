@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coder\CoderFactory.cs" />
     <Compile Include="Coder\CSharpCoder.cs" />
     <Compile Include="Coder\ICoder.cs" />
     <Compile Include="Controls\ElementPanel.cs">
@@ -119,7 +120,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Special\CanBeNull.cs" />
+    <Compile Include="Special\ControledHashSet.cs" />
     <Compile Include="Special\CsvConverter.cs" />
+    <Compile Include="Special\DeepCloner.cs" />
+    <Compile Include="Special\History.cs" />
     <Compile Include="Special\IInnerTextBox.cs" />
     <Compile Include="Special\IncludeInToolBoxAttribute.cs" />
     <Compile Include="Special\IPantable.cs" />
@@ -131,8 +135,15 @@
     <Compile Include="Special\SerializeableKeyValue.cs" />
     <Compile Include="Special\StatArrow.cs" />
     <Compile Include="Special\XmlColor.cs" />
+    <Compile Include="Tools\AbstractTool.cs" />
+    <Compile Include="Tools\Copier.cs" />
+    <Compile Include="Tools\Creater.cs" />
+    <Compile Include="Tools\Cutter.cs" />
+    <Compile Include="Tools\Deleter.cs" />
     <Compile Include="Tools\ITool.cs" />
     <Compile Include="Tools\Linker.cs" />
+    <Compile Include="Tools\Commenter.cs" />
+    <Compile Include="Tools\Paster.cs" />
     <Compile Include="Tools\Pointer.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

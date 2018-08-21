@@ -16,6 +16,7 @@ namespace UMLer.Paintables
         private ClazzHelper helper = new ClazzHelper();
         private Rectangle ClassRect;
 
+
         public ClassITF(IPaintable ParentPaintable,IClazz RepresentingClass) : base(ParentPaintable)
         {
             this.RepresentingClass = RepresentingClass;

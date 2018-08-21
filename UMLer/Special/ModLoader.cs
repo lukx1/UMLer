@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace UMLer.Special
 {
@@ -31,9 +32,19 @@ namespace UMLer.Special
         {
             foreach (var mod in Mods)
             {
-                var task = Task.Run(() => mod.AppStarting());
+                var task = Task.Run(() => 
+                {
+                    try
+                    {
+                        mod.AppStarting();
+                    }
+                    catch(Exception e)
+                    {
+                        MessageBox.Show(null, "Mod " + mod.MOD_ID + "-\"" + mod.MOD_NAME + "\"\r\n"+e,"Mod crashed");
+                    }
+                });
                 if (!task.Wait(TimeOutStart))
-                    throw new TimeoutException($"Mod {mod.MOD_ID}-{mod.MOD_NAME} didn't finish starting in {TimeOutStart.Seconds} seconds");
+                    throw new TimeoutException($"Mod {mod.MOD_ID}-\"{mod.MOD_NAME}\" didn't finish starting in {TimeOutStart.Seconds} seconds");
             }
         }
 
@@ -41,9 +52,18 @@ namespace UMLer.Special
         {
             foreach (var mod in Mods)
             {
-                var task = Task.Run(() => mod.EnvironmentLoaded(diagram));
+                var task = Task.Run(() => {
+                    try
+                    {
+                        mod.EnvironmentLoaded(diagram);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(null, "Mod " + mod.MOD_ID + "-\"" + mod.MOD_NAME + "\"\r\n" + e, "Mod crashed");
+                    }
+                });
                 if (!task.Wait(TimeOutEnv))
-                    throw new TimeoutException($"Mod {mod.MOD_ID}-{mod.MOD_NAME} didn't finish loading in {TimeOutEnv.Seconds} seconds");
+                    throw new TimeoutException($"Mod {mod.MOD_ID}-\"{mod.MOD_NAME}\" didn't finish loading in {TimeOutEnv.Seconds} seconds");
             }
         }
 
@@ -51,9 +71,18 @@ namespace UMLer.Special
         {
             foreach (var mod in Mods)
             {
-                var task = Task.Run(() => mod.AppShuttingDown());
+                var task = Task.Run(() => {
+                    try
+                    {
+                        mod.AppShuttingDown();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(null, "Mod " + mod.MOD_ID + "-\"" + mod.MOD_NAME + "\"\r\n" + e, "Mod crashed");
+                    }
+                });
                 if (!task.Wait(TimeOutShut))
-                    throw new TimeoutException($"Mod {mod.MOD_ID}-{mod.MOD_NAME} didn't finish shutting down in {TimeOutShut.Seconds} seconds");
+                    throw new TimeoutException($"Mod {mod.MOD_ID}-\"{mod.MOD_NAME}\" didn't finish shutting down in {TimeOutShut.Seconds} seconds");
             }
         }
 

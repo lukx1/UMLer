@@ -7,15 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UMLer.Paintables;
+using UMLer.Special;
 
 namespace UMLer.Controls
 {
     public class ElementPanel : Panel
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        private HashSet<IPaintable> _Paintables = new HashSet<IPaintable>();
+        private ControledHashSet _Paintables = new ControledHashSet();
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public HashSet<IPaintable> Paintables { get => _Paintables; set//TODO:Should auto sort
+        public ControledHashSet Paintables { get => _Paintables; set//TODO:Should auto sort
             {
                 _Paintables = value;
                 RegenFocusObj();
@@ -32,6 +33,11 @@ namespace UMLer.Controls
                 FocusChanged?.Invoke(this, new PaintableEventArgs(_FocusedElement));
             } }
         private IPaintable FocusForcedAwayFrom = null;
+
+        public void AddPaintabe(IPaintable paintable)
+        {
+            Paintables.Add(paintable);
+        }
 
         public event PaintableEventHandler FocusChanged;
 
@@ -68,9 +74,9 @@ namespace UMLer.Controls
 
         private void ChangeFocus(IPaintable paintable)
         {
-            if(paintable is IParentPaintable && ((IParentPaintable)paintable).ParentPaintable != null)
+            if(paintable is ISubordinate && ((ISubordinate)paintable).ParentPaintable != null)
             {
-                FocusObj.FocusAround = ((IParentPaintable)paintable).ParentPaintable;
+                FocusObj.FocusAround = ((ISubordinate)paintable).ParentPaintable;
             }
             else if (paintable is ILink || !paintable.ShouldDrawFocusBox())//TODO:Remove is ILink
             {

@@ -19,7 +19,10 @@ namespace UMLer.Paintables
             init();
         }
 
-
+        public override void OnDeleted()
+        {
+            Parent.Paintables.SilentRemove(itf);
+        }
 
         private void PaintShape(Graphics g)
         {

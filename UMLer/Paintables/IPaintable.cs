@@ -47,6 +47,8 @@ namespace UMLer.Paintables
         void RaiseFocusGained(EventArgs a);
         void RaiseFocusLost(EventArgs a);
 
+        void OnDeleted();
+
         bool Contains(Point p);
         
         void Paint(Graphics g);

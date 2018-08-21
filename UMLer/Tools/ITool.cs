@@ -16,6 +16,8 @@ namespace UMLer.Tools
         string Name { get; }
         string Description { get; }
         
+        Diagram Diagram { get; set; }
+
         event PaintMouseHandler ClickedUsingTool;
 
         void Clicked(MouseEventArgs args);

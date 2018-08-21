@@ -12,7 +12,7 @@ using UMLer.Special;
 namespace UMLer.Paintables
 {
     [NoSerialize]
-    public class InnerTextField : CoreClass,IParentPaintable,IDrag
+    public class InnerTextField : CoreClass,ISubordinate,IDrag
     {
         private StringFormat _StringFormat= new StringFormat() { };
         [Browsable(false)]
@@ -94,8 +94,10 @@ namespace UMLer.Paintables
         public event EventHandler DraggingStarted;
         public event EventHandler DraggingStopped;
 
-        private bool DidUserWrite = false;
-        private string UnchangedText = "";
+        private bool Deleted = false;
+
+        protected bool DidUserWrite = false;
+        protected string UnchangedText = "";
 
         private ChainDragCore chainDragCore;
 
@@ -178,6 +180,16 @@ namespace UMLer.Paintables
         public void RaiseDraggingStopped(EventArgs a)
         {
             chainDragCore.RaiseDraggingStopped(a);
+        }
+
+        public override void OnDeleted()
+        {
+            //Delete request is chained to PP
+        }
+
+        public void DeleteRequested()
+        {
+            ParentPaintable.OnDeleted();
         }
     }
 }

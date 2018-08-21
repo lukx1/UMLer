@@ -13,8 +13,9 @@ namespace UMLer.Paintables
         private IPaintable Target;
         private Point PreviousTargetPos;
 
-        public PositionBinder(IPaintable Source)
+        public PositionBinder(IPaintable Source,IPaintable Target)
         {
+            this.Target = Target;
             this.Sources.Add(Source);
         }
 

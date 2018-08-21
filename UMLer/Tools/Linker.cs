@@ -40,6 +40,9 @@ namespace UMLer.Tools
                 return Links.Select(r => r.Start.Location.ToString()+"->"+r.Finish.Location.ToString());
             } }
 
+        [Browsable(false)]
+        public Diagram Diagram { get; set; }
+
         public event PaintMouseHandler ClickedUsingTool;
 
         private void CreateLink()

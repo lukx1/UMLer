@@ -15,7 +15,7 @@ namespace UMLer
 {
     public class Diagram
     {
-        private ITool _SelectedTool = new Pointer();
+        private ITool _SelectedTool;
         public ITool SelectedTool
         {
             get => _SelectedTool;
@@ -24,6 +24,7 @@ namespace UMLer
                 var existingTool = ToolBox.Where(r => r.GetType() == value.GetType()).SingleOrDefault();
                 if (existingTool == null)
                 {
+                    value.Diagram = this;
                     ToolBox.Add(value);
                     _SelectedTool = value;
                     
@@ -47,6 +48,21 @@ namespace UMLer
         private PropertyGrid propertyGrid;
         private ElementPanel elementPanel;
         public ISet<ModCore> Mods = new HashSet<ModCore>();
+
+        public object ClipBoard { get; set; }
+
+        public Color DefPrimaryColor { get; set; } = Color.Cyan;
+        public Color DefSecondaryColor { get; set; } = Color.Black;
+        public Color DefBackgroundColor { get; set; } = Color.White;
+
+        public bool SelectTool<T>() where T : ITool
+        {
+            var tool = ToolBox.OfType<T>().FirstOrDefault();
+            if (tool == null)
+                return false;
+            this.SelectedTool = tool;
+            return true;
+        }
 
         public static int GenerateID()
         {
@@ -87,7 +103,16 @@ namespace UMLer
             return res;
         }
 
-        public List<ClazzLink> PullAllLinks()
+        /// <summary>
+        /// Gets all objects that are both ILink and IPaintable
+        /// </summary>
+        /// <returns>Enumeration of links</returns>
+        public IEnumerable<ILink> GetAllLinks()
+        {
+            return ElementPanel.Paintables.OfType<ILink>().Where(r => r is IPaintable);
+        }
+
+        public List<ClazzLink> PullAllClazzLinks()
         {
             var validLinks = new List<ClazzLink>();
             var links = ElementPanel.Paintables.OfType<ILink>();
@@ -108,6 +133,7 @@ namespace UMLer
 
         public Diagram()
         {
+            _SelectedTool = new Pointer() { Diagram = this };
             Bind();
         }
 

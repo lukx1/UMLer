@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace UMLer.Paintables
 {
-    public interface IParentPaintable
+    public interface ISubordinate
     {
         IPaintable ParentPaintable { get; set; }
+        void DeleteRequested();
     }
 }

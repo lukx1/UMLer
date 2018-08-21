@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UMLer.Coder;
 using UMLer.Controls;
 using UMLer.DiagramData;
 using UMLer.Loading;
@@ -25,57 +26,8 @@ namespace UMLer
     {
         private ModLoader ModLoader = new ModLoader();
         private Diagram diagram = new Diagram();
-
-       /* private static Clazz CreateTestClass()
-        {
-            var c = new Clazz()
-            {
-                Name = "TestClass",
-                AccessModifier = AccessModifier.PUBLIC,
-                FullName = "UMLer.TestClass",
-                Namespace = "UMLer",
-                Fields = new List<Field>()
-                {
-                    new Field()
-                    {
-                        Name = "TestField A",
-                        Type = Clazz.CreateJV(typeof(int)),
-                        AccessModifier = AccessModifier.PUBLIC
-                    },
-                    new Field()
-                    {
-                        Name = "TestField B",
-                        Type = Clazz.CreateJV(typeof(string)),
-                        AccessModifier = AccessModifier.PRIVATE
-                    },
-                    new Field()
-                    {
-                        Name = "TestField C",
-                        Type = Clazz.CreateJV(typeof(XmlColor)),
-                        AccessModifier = AccessModifier.PROTECTED
-                    }
-                },
-                Methods = new List<Method>()
-                {
-                    new Method()
-                    {
-                        Name = "Foo",
-                        AccessModifier = AccessModifier.PUBLIC,
-                        IsVirtual = true,
-                        ReturnType = Clazz.CreateJV(typeof(int))
-                    },
-                    new Method()
-                    {
-                        Name = "CreatePaintable",
-                        AccessModifier = AccessModifier.PRIVATE,
-                        ReturnType = Clazz.CreateJV(typeof(IPaintable))
-                    }
-                }
-            };
-            return c;
-        }
-        */
-
+        private History history = new History();
+        private static string FileBeingWorkedOn = null;
 
         private static Clazz CreateTestClass()
         {
@@ -117,7 +69,7 @@ namespace UMLer
             };
             var r = saver.LoadDiagram();
             saver.LinkPaintables(r,diagram);
-            diagram.ElementPanel.Paintables = r;
+            diagram.ElementPanel.Paintables = new ControledHashSet(r);
         }
 
         private void Init()
@@ -202,7 +154,7 @@ namespace UMLer
             };
             var r = saver.LoadDiagram();
             saver.LinkPaintables(r, diagram);
-            diagram.ElementPanel.Paintables = r;
+            diagram.ElementPanel.Paintables = new ControledHashSet(r);
         }
 
         private ImageFormat ParseImageFormat(string ext)
@@ -225,24 +177,37 @@ namespace UMLer
             }
         }
 
-        private void labelSSave_Click(object sender, EventArgs e)
+        private void ExportAsImage()
         {
             var bitmap = ElementPanel.CreateBitmap();
             SaveFileDialog sf = new SaveFileDialog
             {
                 Filter = "Bitmap Image (.bmp)|*.bmp|Gif Image (.gif)|*.gif|JPEG Image (.jpeg)|*.jpeg|Png Image (.png)|*.png|Tiff Image (.tiff)|*.tiff|Wmf Image (.wmf)|*.wmf"
             };
-            sf.ShowDialog();
+            var res = sf.ShowDialog();
+
+            if (res == DialogResult.OK)
+            {
+
+                var path = sf.FileName;
+                if (path == null)
+                    return;
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                    return;
+                try
+                {
+                    bitmap.Save(path, ParseImageFormat(Path.GetExtension(path).ToUpper()));
+                }
+                catch (ExternalException ex)
+                {
+                    MessageBox.Show("Error " + ex.ToString());
+                }
+            }
+        }
+
+        private void labelSSave_Click(object sender, EventArgs e)
+        {
             
-            var path = sf.FileName;
-            try
-            {
-                bitmap.Save(path, ParseImageFormat(Path.GetExtension(path).ToUpper()));
-            }
-            catch (ExternalException ex)
-            {
-                MessageBox.Show("Error " + ex.ToString());
-            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -263,6 +228,225 @@ namespace UMLer
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             ModLoader.AppShuttingDown();
+        }
+
+        private void labelCopier_Click(object sender, EventArgs e)
+        {
+            diagram.SelectedTool = new Copier();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void imageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportAsImage();
+        }
+
+        private DialogResult ConfirmationDialog(string text, string title)
+        {
+            var msg = MessageBox.Show(this,text,title,MessageBoxButtons.YesNoCancel);
+            return msg;
+        }
+
+        private void DoSaveProject(string fileName)
+        {
+            Saver saver = new Saver()
+            {
+                PathToFile = fileName
+            };
+            try
+            {
+                saver.SaveDiagram(diagram);
+                FileBeingWorkedOn = Path.GetFileNameWithoutExtension(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error " + ex.ToString());
+            }
+        }
+
+        private void ProjectSaveAs()
+        {
+            var sf = new SaveFileDialog();
+            if(FileBeingWorkedOn != null)
+            {
+                sf.FileName = FileBeingWorkedOn;
+            }
+            
+            sf.Filter = "UMLer project (.ump)|*.ump|All files (*.*)|*.*";
+            sf.FilterIndex = 1;
+            sf.RestoreDirectory = true;
+
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+                DoSaveProject(sf.FileName);
+            }
+        }
+
+        private void ProjectSave()
+        {
+            if(File.Exists(FileBeingWorkedOn))
+            {
+                DoSaveProject(FileBeingWorkedOn);
+            }
+            else
+            {
+                ProjectSaveAs();
+            }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var shouldSave = ConfirmationDialog("Do you want to save changes?", "UMLer");
+            if (shouldSave == DialogResult.Cancel)
+            {
+                return;
+            }
+            else if (shouldSave == DialogResult.Yes)
+            {
+                ProjectSave();
+            }
+            diagram.ElementPanel.Paintables.Clear();
+        }
+
+        private void OpenFileDialog()
+        {
+            var sf = new OpenFileDialog();
+            sf.CheckFileExists = true;
+            sf.CheckPathExists = true;
+            sf.Filter = "UMLer project (.ump)|*.ump|All files (*.*)|*.*";
+            sf.FilterIndex = 1;
+            sf.RestoreDirectory = true;
+
+            if (sf.ShowDialog() == DialogResult.OK)
+            {
+
+                Saver saver = new Saver()
+                {
+                    PathToFile = sf.FileName
+                };
+                var r = saver.LoadDiagram();
+                saver.LinkPaintables(r, diagram);
+                diagram.ElementPanel.Paintables = new ControledHashSet(r);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var shouldSave = ConfirmationDialog("Do you want to save changes?", "UMLer");
+            if (shouldSave == DialogResult.Cancel)
+            {
+                return;
+            }
+            else if (shouldSave == DialogResult.Yes)
+            {
+                ProjectSave();
+            }
+            OpenFileDialog();
+        }
+
+        
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProjectSave();
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ProjectSaveAs();
+        }
+
+        private void codeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Path to directory or null</returns>
+        private string CodeExportDialog()
+        {
+            var fbd = new FolderBrowserDialog();
+            var result = fbd.ShowDialog();
+
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            {
+                return fbd.SelectedPath;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void ExportCodeAs(Language language)
+        {
+            var coder = new CoderFactory() { Language = language }.CreateCoder();
+            coder.Diagram = diagram;
+            if (!coder.AreClazzesValid())
+            {
+                MessageBox.Show(
+                    this,
+                    "Classes can't be converted into selected language",
+                    "Export Error",MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                    );
+                return;
+            }
+            var path = CodeExportDialog();
+            if (path == null)
+            {
+                return;
+            }
+            coder.OutputDirectory = path;
+            try
+            {
+                coder.CreateCode();
+                MessageBox.Show("Code successfully exported");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error " + ex.ToString());
+            }
+        }
+
+        private void javaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportCodeAs(Language.JAVA);
+        }
+
+        private void cToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportCodeAs(Language.CSHARP);
+        }
+
+        private void cToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ExportCodeAs(Language.CPP);
+        }
+
+        private void labelCreater_Click(object sender, EventArgs e)
+        {
+            diagram.SelectedTool = new Creater();
+        }
+
+        private void labelNoter_Click(object sender, EventArgs e)
+        {
+            diagram.SelectedTool = new Commenter();
+        }
+
+        private void labelPaster_Click(object sender, EventArgs e)
+        {
+            diagram.SelectedTool = new Paster();
+        }
+
+        private void labelDeleter_Click(object sender, EventArgs e)
+        {
+            diagram.SelectedTool = new Deleter();
         }
     }
 }

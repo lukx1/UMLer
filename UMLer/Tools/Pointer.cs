@@ -15,6 +15,8 @@ namespace UMLer.Tools
 
         public string Description => "Used for selecting elements";
 
+        public Diagram Diagram { get; set; }
+
         public event PaintMouseHandler ClickedUsingTool;
 
         public void Clicked(MouseEventArgs args)

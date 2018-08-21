@@ -225,5 +225,10 @@ namespace UMLer.Paintables
         {
             return false;
         }
+
+        public virtual void OnDeleted()
+        {
+            
+        }
     }
 }

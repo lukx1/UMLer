@@ -11,7 +11,7 @@ namespace UMLer.Paintables
     [Serializable]
     public class DiagramClass : DraggableCoreClass,IClassing
     {
-        private Clazz _RepresentingClass = Clazz.Empty;
+        private Clazz _RepresentingClass = Clazz.CreateEmpty();
         public Clazz RepresentingClass
         {
             get => _RepresentingClass;
@@ -21,6 +21,8 @@ namespace UMLer.Paintables
                 RaisePropertyChanged("RepresentingClass");
             }
         }
+
+        private bool IsDeleted = false;
 
         private const int MIN_WIDTH = 40;
         private const int MAX_WIDTH = 300;
@@ -224,6 +226,21 @@ namespace UMLer.Paintables
                 RecalcPaint = false;
             }
             
+        }
+
+        public override void OnDeleted()
+        {
+            if (IsDeleted)
+                return;
+            lock (this)
+            {
+                Parent.Paintables.SilentRemove(__HeaderTextField);
+                foreach (var methodOrField in Methods.Union<IPaintable>(Fields))
+                {
+                    Parent.Paintables.SilentRemove(methodOrField);
+                }
+                IsDeleted = true;
+            }
         }
 
         public override void Paint(Graphics g)
