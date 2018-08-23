@@ -11,18 +11,29 @@ using UMLer.Special;
 
 namespace UMLer.Paintables
 {
-    public class FieldITF : InnerTextField
+    public class FieldITF : InnerTextField, IClassing
     {
         public override string Text { get => base.Text; set => base.Text = value; }
-        private IField RepresentingField;
+        public IField RepresentingField;
         private ClazzHelper helper = new ClazzHelper();
         [Browsable(false)]
         public bool LastField { get; set; } = false;
+        [Browsable(false)]
+        public IClazz RepresentingClass { get; set; }
+        private bool IsInitialized = true;
 
-        public FieldITF(IPaintable ParentPaintable,IField RepresentingField) : base(ParentPaintable)
+        public event EventHandler Initialized;
+
+        public FieldITF(IPaintable ParentPaintable,IField RepresentingField, Clazz clazz, bool Initialized = true) : base(ParentPaintable)
         {
             TextWritten += FieldITF_TextWritten;
             this.RepresentingField = RepresentingField;
+            this.RepresentingClass = clazz;
+            this.IsInitialized = Initialized;
+            if (!Initialized)
+            {
+                this.Text = "...";
+            }
         }
 
         public override void Paint(Graphics g)
@@ -36,8 +47,14 @@ namespace UMLer.Paintables
                     g.DrawLine(Pens.Black, this.Location + new Size(0, this.Size.Height - 2), this.Location + new Size(this.Size.Width, this.Size.Height - 2));
                 }
             }
-            if (this.IsFocused())
+            if (!IsInitialized && !this.IsFocused())
             {
+                g.DrawString("...", Font, Brushes.Black, DisplayRectangle, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+            }
+            else if (this.IsFocused())
+            {
+                if (Text.Trim().EndsWith("...") && !this.IsInitialized)
+                    Text = "";
                 base.Paint(g);
             }
             else
@@ -103,12 +120,29 @@ namespace UMLer.Paintables
         {
             try
             {
+                if (e.NewText == "" && this.IsInitialized)
+                {
+                    RepresentingClass.Fields.Remove((Clazz.Field)this.RepresentingField);
+                    if (ParentPaintable is DiagramClass)
+                    {
+                        ((DiagramClass)ParentPaintable).RemoveField((Clazz.Field)this.RepresentingField);
+                        ParentPaintable.Parent.Diagram.RemoveWithAsocSilent(this);
+                    }
+                    this.Parent.Paintables.SilentRemove(this);
+                    return;
+                }
                 var res = helper.MakeFieldFromSyntax(e.NewText);//TODO:Shouldn't use this function
                 this.RepresentingField.AccessModifier = res.AccessModifier;
                 this.RepresentingField.ExtraModifiers = res.ExtraModifiers;
                 this.RepresentingField.Name = res.Name;
                 this.RepresentingField.Type = res.Type;
                 this.Text = RepresentingField.ToSyntax();
+                if (!IsInitialized)
+                {
+                    IsInitialized = true;
+                    Initialized?.Invoke(this, new EventArgs());
+                    RepresentingClass.Fields.Add((Clazz.Field)this.RepresentingField);
+                }
             }
             catch(ParseException ex)
             {//TODO:Better

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using UMLer.Controls;
+using UMLer.DiagramData;
 using UMLer.Paintables.LinkPainters;
 using UMLer.Special;
 

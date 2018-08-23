@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -27,7 +28,22 @@ namespace UMLer
         private ModLoader ModLoader = new ModLoader();
         private Diagram diagram = new Diagram();
         private History history = new History();
-        private static string FileBeingWorkedOn = null;
+
+        private string __FileBeingWorkedOn = null;
+        private string FileBeingWorkedOn { get => __FileBeingWorkedOn; set
+            {
+                __FileBeingWorkedOn = value;
+                if(__FileBeingWorkedOn == null)
+                {
+                    this.Text = "Unsaved UML Project - UMLer";
+                }
+                else
+                {
+                    this.Text = Path.GetFileName(__FileBeingWorkedOn+" - UMLer");
+                }
+            } }
+
+        static int Counter = 0;
 
         private static Clazz CreateTestClass()
         {
@@ -40,7 +56,7 @@ namespace UMLer
             Field field2 = helper.MakeFieldFromSyntax("protected Dog Pet");
             return new Clazz()
             {
-                Name = "TestClass",
+                Name = "TestClass"+Counter++,
                 Methods = new List<Method>() {test0,test1,test2 },
                 Fields = new List<Field>() { field0,field2,field1}
             }
@@ -49,14 +65,18 @@ namespace UMLer
 
         private void TestBoot()
         {
-            var e1 = new LargeClass(ElementPanel) { Location = new Point(100, 100), Properties = new List<string>() { "Tohle", "Je", "Test" } };
-            var e2 = new LargeClass(ElementPanel) { Location = new Point(500, 100) };
-            ElementPanel.Paintables.Add(e1);
-            ElementPanel.Paintables.Add(e2);
+            //var e1 = new LargeClass(ElementPanel) { Location = new Point(100, 100), Properties = new List<string>() { "Tohle", "Je", "Test" } };
+            //var e2 = new LargeClass(ElementPanel) { Location = new Point(500, 100) };
+            //ElementPanel.Paintables.Add(e1);
+            //ElementPanel.Paintables.Add(e2);
             ElementPanel.Paintables.Add(new Comment(ElementPanel) { Location = new Point(500, 100), Size = new Size(100, 100) });
-            ElementPanel.Paintables.Add(new Link(e1, e2) {BendStyle = Paintables.LinkPainters.BendStyle.FORTY_FIVE,LinkTypeFinish = Paintables.LinkPainters.LinkType.AGGREGATION,LinkTypeStart = Paintables.LinkPainters.LinkType.AGGREGATION });
-            ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
-            ElementPanel.Paintables.Add(new DiagramClass() { Parent = ElementPanel,Location = new Point(300,300), Size = new Size(100,100),RepresentingClass = CreateTestClass()});
+            
+            //ElementPanel.Paintables.Add(new SimpleClass(ElementPanel) { Location = new Point(200, 200) });
+            var dc0 = new DiagramClass() { Parent = ElementPanel, Location = new Point(300, 300), Size = new Size(100, 100), RepresentingClass = CreateTestClass() };
+            var dc1 = new DiagramClass() { Parent = ElementPanel, Location = new Point(100, 100), Size = new Size(100, 100), RepresentingClass = CreateTestClass() };
+            ElementPanel.Paintables.Add(dc0);
+            ElementPanel.Paintables.Add(dc1);
+            //ElementPanel.Paintables.Add(new Link(dc0, dc1) { BendStyle = Paintables.LinkPainters.BendStyle.FORTY_FIVE, LinkTypeFinish = Paintables.LinkPainters.LinkType.INHERITANCE, LinkTypeStart = Paintables.LinkPainters.LinkType.INHERITANCE });
             //ElementPanel.Paintables.Add(new InnerTextField() { Location = new Point(300,300),Size = new Size(100,13),Parent = ElementPanel});
             //ElementPanel.Controls.Add(new InvisTextBox() {Location = new Point(400,400),Size = new Size(20,13) });
         }
@@ -82,11 +102,6 @@ namespace UMLer
             ElementPanel.BindDiagram(diagram);
         }
 
-        private class Test
-        {
-
-        }
-
         private void LoadMods()
         {
             if (System.Diagnostics.Debugger.IsAttached)
@@ -108,7 +123,23 @@ namespace UMLer
             }
         }
 
-        public Form1()
+        private void RealBoot(string[] launchArgs)
+        {
+            LoadMods();
+            if(launchArgs.Length == 1 && File.Exists(launchArgs[0]))
+            {
+                try
+                {
+                    OpenFile(launchArgs[0]);
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("File could not be opened");
+                }
+            }
+        }
+
+        public Form1(string[] launchArgs)
         {
             LoadMods();
             InitializeComponent();
@@ -135,26 +166,6 @@ namespace UMLer
         private void LabelAddComplex_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Saver saver = new Saver()
-            {
-                PathToFile = @"C:\Out\UMLer.xml"
-            };
-            saver.SaveDiagram(diagram);
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Saver saver = new Saver()
-            {
-                PathToFile = @"C:\Out\UMLer.xml"
-            };
-            var r = saver.LoadDiagram();
-            saver.LinkPaintables(r, diagram);
-            diagram.ElementPanel.Paintables = new ControledHashSet(r);
         }
 
         private ImageFormat ParseImageFormat(string ext)
@@ -197,6 +208,7 @@ namespace UMLer
                 try
                 {
                     bitmap.Save(path, ParseImageFormat(Path.GetExtension(path).ToUpper()));
+                    Process.Start(path);
                 }
                 catch (ExternalException ex)
                 {
@@ -260,7 +272,7 @@ namespace UMLer
             try
             {
                 saver.SaveDiagram(diagram);
-                FileBeingWorkedOn = Path.GetFileNameWithoutExtension(fileName);
+                FileBeingWorkedOn = fileName;
             }
             catch (Exception ex)
             {
@@ -312,6 +324,20 @@ namespace UMLer
             diagram.ElementPanel.Paintables.Clear();
         }
 
+        private void OpenFile(string FilePath)
+        {
+            
+            Saver saver = new Saver()
+            {
+                PathToFile = FilePath
+            };
+            var r = saver.LoadDiagram();
+            saver.LinkPaintables(r, diagram);
+            diagram.ElementPanel.Paintables = new ControledHashSet(r);
+            diagram.ElementPanel.Refresh();
+            FileBeingWorkedOn = FilePath;
+        }
+
         private void OpenFileDialog()
         {
             var sf = new OpenFileDialog();
@@ -324,13 +350,7 @@ namespace UMLer
             if (sf.ShowDialog() == DialogResult.OK)
             {
 
-                Saver saver = new Saver()
-                {
-                    PathToFile = sf.FileName
-                };
-                var r = saver.LoadDiagram();
-                saver.LinkPaintables(r, diagram);
-                diagram.ElementPanel.Paintables = new ControledHashSet(r);
+                OpenFile(sf.FileName);
             }
         }
 
@@ -385,7 +405,7 @@ namespace UMLer
 
         private void ExportCodeAs(Language language)
         {
-            var coder = new CoderFactory() { Language = language }.CreateCoder();
+            var coder = new CoderFactory(diagram) { Language = language }.CreateCoder();
             coder.Diagram = diagram;
             if (!coder.AreClazzesValid())
             {
@@ -403,10 +423,11 @@ namespace UMLer
                 return;
             }
             coder.OutputDirectory = path;
+            coder.CreateCode();
+            Process.Start("explorer", coder.OutputDirectory);
             try
             {
-                coder.CreateCode();
-                MessageBox.Show("Code successfully exported");
+                
             }
             catch (Exception ex)
             {

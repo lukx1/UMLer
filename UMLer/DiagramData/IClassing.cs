@@ -8,6 +8,6 @@ namespace UMLer.DiagramData
 {
     public interface IClassing
     {
-        Clazz RepresentingClass { get; set; }
+        IClazz RepresentingClass { get; set; }
     }
 }

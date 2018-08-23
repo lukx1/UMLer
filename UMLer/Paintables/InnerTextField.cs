@@ -12,26 +12,34 @@ using UMLer.Special;
 namespace UMLer.Paintables
 {
     [NoSerialize]
-    public class InnerTextField : CoreClass,ISubordinate,IDrag
+    [Serializable]
+    public class InnerTextField : CoreClass, ISubordinate, IDrag
     {
-        private StringFormat _StringFormat= new StringFormat() { };
+        private StringFormat _StringFormat = new StringFormat() { };
         [Browsable(false)]
-        public StringFormat StringFormat { get => _StringFormat; set
+        public StringFormat StringFormat
+        {
+            get => _StringFormat; set
             {
                 _StringFormat = value;
                 RaisePropertyChanged("StringFormat");
-            } }
+            }
+        }
 
         private string _Text = "";
         [Category("Inner text")]
-        public virtual string Text { get => _Text; set {
-                if(value == null)
+        public virtual string Text
+        {
+            get => _Text; set
+            {
+                if (value == null)
                 {
                     value = "";
                 }
                 _Text = value;
                 RaisePropertyChanged("Text");
-            } }
+            }
+        }
         private bool _PaintBackground = false;
         [Browsable(false)]
         public virtual bool PaintBackground
@@ -76,6 +84,11 @@ namespace UMLer.Paintables
         [Category("Design")]
         public override Font Font { get => ParentPaintable.Font; set => ParentPaintable.Font = value; }
 
+        [Browsable(false)]
+        public virtual bool RelayCopy { get; set; } = false;
+
+        private volatile bool BackspaceHeld = false;
+
         public class TextWrittenArgs : EventArgs
         {
             public string PreviousText { get; private set; }
@@ -94,27 +107,48 @@ namespace UMLer.Paintables
         public event EventHandler DraggingStarted;
         public event EventHandler DraggingStopped;
 
-        private bool Deleted = false;
-
         protected bool DidUserWrite = false;
         protected string UnchangedText = "";
 
         private ChainDragCore chainDragCore;
 
+        private Timer DeleteTimer = new Timer();
+
         public InnerTextField(IPaintable ParentPaintable) : base(true)
         {
             _ParentPaintable = ParentPaintable;
-           // FocusGained += (object o, EventArgs e) => Parent.ForceFocusAround(ParentPaintable);
-           // FocusLost += (object o, EventArgs e) => Parent.ReleaseForcedFocusAround();
+            DeleteTimer.Interval = 20;
+            DeleteTimer.Tick += DeleteTimer_Tick;
+            // FocusGained += (object o, EventArgs e) => Parent.ForceFocusAround(ParentPaintable);
+            // FocusLost += (object o, EventArgs e) => Parent.ReleaseForcedFocusAround();
             KeyUp += (object o, KeyEventArgs e) => FieldKeyUp(e);
             KeyDown += (object o, KeyEventArgs e) => FieldKeyDown(e);
             KeyPressed += (object o, KeyPressEventArgs e) => FieldKeyPress(e);
             FocusGained += (object o, EventArgs e) => UnchangedText = this.Text;
-            FocusLost += (object o, EventArgs e) => { if (DidUserWrite) { TextWritten?.Invoke(this,new TextWrittenArgs(UnchangedText,Text));DidUserWrite = false; } };
+            FocusLost += (object o, EventArgs e) => { if (DidUserWrite) { TextWritten?.Invoke(this, new TextWrittenArgs(UnchangedText, Text)); DidUserWrite = false; } };
             ParentPaintable.PropertyChanged += ParentPaintable_PropertyChanged;
             chainDragCore = new ChainDragCore(this, _ParentPaintable);
             chainDragCore.DraggingStarted += (object o, EventArgs a) => { DraggingStarted?.Invoke(this, new EventArgs()); };
             chainDragCore.DraggingStopped += (object o, EventArgs a) => { DraggingStopped?.Invoke(this, new EventArgs()); };
+        }
+
+        private int DelTicks = 0;
+
+        private void DeleteTimer_Tick(object sender, EventArgs e)
+        {
+            if (DelTicks == 0)
+            {
+                BackspaceTick();
+            }
+            else if ((DelTicks*DeleteTimer.Interval) < 500)
+            {
+                //Nothing
+            }
+            else
+            {
+                BackspaceTick();
+            }
+            DelTicks++;
         }
 
         private void ParentPaintable_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -125,24 +159,48 @@ namespace UMLer.Paintables
             this.Font = ParentPaintable.Font;*/
         }
 
-        public override void Paint(Graphics g)
+        protected void Paint(Graphics g, string WriteText)
         {
-            if(PaintBackground)
+            if (PaintBackground)
                 g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
             if (this.IsFocused())
             {
                 g.DrawRectangle(new Pen(new SolidBrush(Diagram.HighlightColor), Diagram.PenDefaultWidth), DisplayRectangle);
             }
-            g.DrawString(Text,Font,new SolidBrush(PrimaryColor),new RectangleF(Location.X,Location.Y,Size.Width,Size.Height),StringFormat);
+            g.DrawString(WriteText, Font, new SolidBrush(PrimaryColor), new RectangleF(Location.X, Location.Y, Size.Width, Size.Height), StringFormat);
+        }
+
+        public override void Paint(Graphics g)
+        {
+            Paint(g, Text);
         }
 
         public virtual void FieldKeyUp(KeyEventArgs args)
         {
-            
-            if (args.KeyCode == Keys.Back && Text.Length > 0)
+            if (args.KeyCode == Keys.Back)
+            {
+                BackspaceHeld = false;
+                DeleteTimer.Stop();
+                DelTicks = 0;
+            }
+            /*if (args.KeyCode == Keys.Back && Text.Length > 0)
             {
                 Text = Text.Substring(0, Text.Length - 1);
                 DidUserWrite = true;
+            }*/
+        }
+
+        private bool BackspaceTick()
+        {
+            if (Text.Length > 0)
+            {
+                Text = Text.Substring(0, Text.Length - 1);
+                DidUserWrite = true;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -159,13 +217,18 @@ namespace UMLer.Paintables
         {
             if (args.KeyCode == Keys.Enter)
                 this.ParentPaintable.Focus();
-            else if(args.KeyCode == Keys.Escape)
+            else if (args.KeyCode == Keys.Escape)
             {
                 this.Text = UnchangedText;
                 this.ParentPaintable.Focus();
             }
-
+            else if (args.KeyCode == Keys.Back)
+            {
+                BackspaceHeld = true;
+                DeleteTimer.Start();
+            }
         }
+
 
         public override bool ShouldDrawFocusBox()
         {

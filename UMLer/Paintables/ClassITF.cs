@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,11 @@ using UMLer.Special;
 
 namespace UMLer.Paintables
 {
-    public class ClassITF : InnerTextField
+    [Serializable]
+    public class ClassITF : InnerTextField, IClassing
     {
-        private IClazz RepresentingClass;
+        [Browsable(false)]
+        public IClazz RepresentingClass { get; set; }
         private ClazzHelper helper = new ClazzHelper();
         private Rectangle ClassRect;
 
@@ -28,6 +31,11 @@ namespace UMLer.Paintables
             try
             {
                 var res = helper.MakeClassFromSyntax(e.NewText);//TODO:Shouldn't use this function
+                if (ParentPaintable.Parent.Diagram.GetAllClazzNames().Contains(res.Name))
+                {
+                    MessageBox.Show(null, "Duplicate class names are not allowed", "Error - UMLer", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 this.RepresentingClass.AccessModifier = res.AccessModifier;
                 this.RepresentingClass.ExtraModifiers = res.ExtraModifiers;
                 this.RepresentingClass.Name = res.Name;

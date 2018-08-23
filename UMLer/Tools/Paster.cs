@@ -23,7 +23,14 @@ namespace UMLer.Tools
             {
                 if((Diagram.ClipBoard is IPaintable))
                 {
-                    IPaintable clone = DeepCloner.DeepClone<IPaintable>((IPaintable)Diagram.ClipBoard);
+                    object cloneObj = ((IPaintable)Diagram.ClipBoard).SafeDeepClone();
+                    if(cloneObj == null)
+                    {
+                        MessageBox.Show("Object can't be pasted");
+                        return;
+                    }
+                    IPaintable clone = (IPaintable)cloneObj;
+
                     clone.Location = args.Location;
                     Diagram.ElementPanel.Paintables.Add(clone);
                 }

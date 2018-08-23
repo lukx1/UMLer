@@ -226,6 +226,11 @@ namespace UMLer.Paintables
             return false;
         }
 
+        public virtual object SafeDeepClone()
+        {
+            return null;
+        }
+
         public virtual void OnDeleted()
         {
             

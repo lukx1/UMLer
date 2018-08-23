@@ -82,7 +82,7 @@ namespace UMLer.Loading
         }
 
         private void HandleLink(ILink link, HashSet<IPaintable> paintables)
-        {
+        {//TODO:null chekc
             var start = paintables.Where(r => r.ID == link.StartID).FirstOrDefault();
             link.Start = start;
             var finish = paintables.Where(r => r.ID == link.FinishID).FirstOrDefault();

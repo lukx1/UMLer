@@ -24,17 +24,10 @@ namespace UMLer.Tools
         public override void ClickedOnPaintable(MouseEventArgs args, [CanBeNull] IPaintable nullablePaintable)
         {
             base.ClickedOnPaintable(args,nullablePaintable);
-            if (nullablePaintable == null || Diagram == null)
-                return;
-            var linksToDelete = Diagram.GetAllLinks().Where(
-                r => r.Start == nullablePaintable || r.Finish == nullablePaintable
-                ).ToList();
-            foreach (var link in linksToDelete)
+            if(Diagram != null && nullablePaintable != null)
             {
-                Diagram.ElementPanel.Paintables.Remove((IPaintable)link);
+                Diagram.RemoveWithAsoc(nullablePaintable);
             }
-            Diagram.ElementPanel.Paintables.Remove(nullablePaintable);
-            Diagram.ElementPanel.Refresh();
         }
     }
 }

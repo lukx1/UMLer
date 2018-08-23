@@ -51,6 +51,7 @@
     <Compile Include="Coder\CoderFactory.cs" />
     <Compile Include="Coder\CSharpCoder.cs" />
     <Compile Include="Coder\ICoder.cs" />
+    <Compile Include="Coder\JavaCoder.cs" />
     <Compile Include="Controls\ElementPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -126,7 +127,6 @@
     <Compile Include="Special\History.cs" />
     <Compile Include="Special\IInnerTextBox.cs" />
     <Compile Include="Special\IncludeInToolBoxAttribute.cs" />
-    <Compile Include="Special\IPantable.cs" />
     <Compile Include="Special\LinkMath.cs" />
     <Compile Include="Special\ModCore.cs" />
     <Compile Include="Special\ModLoader.cs" />

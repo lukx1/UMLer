@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,15 +11,26 @@ using UMLer.Special;
 
 namespace UMLer.Paintables
 {
-    public class MethodITF : InnerTextField
+    public class MethodITF : InnerTextField, IClassing
     {
-        private IMethod RepresentingMethod;
+        public IMethod RepresentingMethod;
         private ClazzHelper helper = new ClazzHelper();
+        [Browsable(false)]
+        public IClazz RepresentingClass { get; set; }
+        public bool IsInitialized = true;
 
-        public MethodITF(IPaintable ParentPaintable,IMethod RepresentingMethod) : base(ParentPaintable)
+        public event EventHandler Initialized;
+
+        public MethodITF(IPaintable ParentPaintable,IMethod RepresentingMethod, Clazz clazz, bool IsInitialized = true) : base(ParentPaintable)
         {
             this.RepresentingMethod = RepresentingMethod;
             TextWritten += MethodITF_TextWritten;
+            this.RepresentingClass = clazz;
+            this.IsInitialized = IsInitialized;
+            if (!IsInitialized)
+            {
+                this.Text = "...";
+            }
         }
 
         public override void Paint(Graphics g)
@@ -28,8 +40,14 @@ namespace UMLer.Paintables
                 g.FillRectangle(new SolidBrush(BackgroundColor), DisplayRectangle);
                 g.DrawRectangle(Pens.Black, DisplayRectangle);
             }
-            if (this.IsFocused())
+            if (!IsInitialized && !this.IsFocused())
             {
+                g.DrawString("...", Font, Brushes.Black, DisplayRectangle, new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+            }
+            else if (this.IsFocused())
+            {
+                if (Text.Trim().Contains("...") && !this.IsInitialized)
+                    Text = "";
                 base.Paint(g);
             }
             else
@@ -104,6 +122,17 @@ namespace UMLer.Paintables
         {
             try
             {
+                if(e.NewText == "" && this.IsInitialized)
+                {
+                    RepresentingClass.Methods.Remove((Clazz.Method)this.RepresentingMethod);
+                    if(ParentPaintable is DiagramClass)
+                    {
+                        ((DiagramClass)ParentPaintable).RemoveMethod((Clazz.Method)this.RepresentingMethod);
+                        ParentPaintable.Parent.Diagram.RemoveWithAsocSilent(this);
+                    }
+                    this.Parent.Paintables.SilentRemove(this);
+                    return;
+                }
                 var res = helper.MakeMethodFromSyntax(e.NewText);//TODO:Shouldn't use this function
                 this.RepresentingMethod.AccessModifier = res.AccessModifier;
                 this.RepresentingMethod.ExtraModifiers = res.ExtraModifiers;
@@ -111,6 +140,12 @@ namespace UMLer.Paintables
                 this.RepresentingMethod.Parameters = res.Parameters;
                 this.RepresentingMethod.ReturnType = res.ReturnType;
                 this.Text = RepresentingMethod.ToSyntax();
+                if (!IsInitialized)
+                {
+                    IsInitialized = true;
+                    Initialized?.Invoke(this, new EventArgs());
+                    RepresentingClass.Methods.Add((Clazz.Method)this.RepresentingMethod);
+                }
             }
             catch (ParseException ex)
             {//TODO:Better

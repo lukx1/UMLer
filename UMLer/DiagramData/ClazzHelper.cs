@@ -63,7 +63,7 @@ namespace UMLer.DiagramData
             public string Name { get; set; }
             public string FixedText { get; set; }
             public string OriginalText { get; set; }
-            public bool IsStatic = true;
+            public bool IsStatic = false;
         }
 
         private ParseClassResult ParseClassSyntax(string s)
@@ -133,6 +133,8 @@ namespace UMLer.DiagramData
                 method.ExtraModifiers.Add(ExtraModifier.ABSTRACT);
             var fixedString = Regex.Replace(s, ExtraModReplaceRegX, "",RegexOptions.IgnoreCase);
             fixedString = Regex.Replace(fixedString, "\\s\\s+", "");
+            if(!fixedString.Contains("("))
+                throw new ParseException("Invalid argument syntax");
             var nameing = fixedString.Substring(0, fixedString.IndexOf('('));
             if(Regex.IsMatch(fixedString, "^(public|private|protected).*$", RegexOptions.IgnoreCase))
             {
@@ -161,6 +163,8 @@ namespace UMLer.DiagramData
         private List<Field> ParseParamsInsideMethod(string s)
         {
             List<Field> fields = new List<Field>();
+            if (s == "")
+                return fields;
             foreach (var part in s.Split(','))
             {
                 var pT = part.Trim();

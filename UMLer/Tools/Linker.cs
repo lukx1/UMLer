@@ -63,6 +63,8 @@ namespace UMLer.Tools
             link.LineWidth = this.LineWidth;
             Links.Add(link);
             link.Parent.Paintables.Add(link);
+
+            Diagram?.RaiseLinkCreated(this, link);
         }
 
         private bool IsLinkValid()

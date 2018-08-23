@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UMLer.Controls;
+using UMLer.Special;
 
 namespace UMLer.Paintables
 {
@@ -13,6 +14,9 @@ namespace UMLer.Paintables
     {
 
         private InnerTextField itf;
+
+        public string Text { get => itf == null ? "" : itf.Text; set { if (itf != null) itf.Text = value; else TextToSet = value; } }
+        private string TextToSet = null;
 
         public Comment()
         {
@@ -22,6 +26,7 @@ namespace UMLer.Paintables
         public override void OnDeleted()
         {
             Parent.Paintables.SilentRemove(itf);
+            Parent.Paintables.SilentRemove(this);
         }
 
         private void PaintShape(Graphics g)
@@ -42,6 +47,11 @@ namespace UMLer.Paintables
             if(itf == null)
             {
                 itf = new InnerTextField(this);
+                if (TextToSet != null)
+                {
+                    itf.Text = TextToSet;
+                    TextToSet = null;
+                }
                 itf.Location = this.Location;
                 itf.StringFormat = new StringFormat()
                 {
@@ -60,6 +70,14 @@ namespace UMLer.Paintables
         private void init()
         {
             this.PropertyChanged += (object o, PropertyChangedEventArgs a) => { if (itf == null) return; itf.Location = this.Location;itf.Size = this.Size; };
+        }
+
+        public override object SafeDeepClone()
+        {
+            var c = new Comment(this.Parent);
+            DeepCloner.CopyIPaintable(this, c);
+            c.Text = this.Text;
+            return c;
         }
 
         public Comment(ElementPanel Parent) : base(Parent)

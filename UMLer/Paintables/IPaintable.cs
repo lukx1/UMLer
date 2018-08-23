@@ -55,6 +55,11 @@ namespace UMLer.Paintables
 
         void Regenerate();
 
+        object SafeDeepClone();
+
+       //// void SetProperty<T>(string name, ref Nullable<T> oldValue, Nullable<T> newValue) where T : struct, System.IComparable<T>;
+       // bool SetProperty<T>(string name, ref T oldValue, T newValue) where T : System.IComparable<T>;
+
         void Focus();
         bool IsFocused();
         bool ShouldDrawFocusBox();

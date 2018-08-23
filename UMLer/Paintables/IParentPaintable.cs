@@ -9,6 +9,7 @@ namespace UMLer.Paintables
     public interface ISubordinate
     {
         IPaintable ParentPaintable { get; set; }
+        bool RelayCopy { get; set; }
         void DeleteRequested();
     }
 }

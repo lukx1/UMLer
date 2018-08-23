@@ -13,25 +13,36 @@ namespace UMLer.Controls
 {
     public class ElementPanel : Panel
     {
+        private Diagram _diagram = null;
+        public Diagram Diagram { get => _diagram; set
+            {
+                _diagram = value;
+                _Paintables.Diagram = value;
+            } }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         private ControledHashSet _Paintables = new ControledHashSet();
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ControledHashSet Paintables { get => _Paintables; set//TODO:Should auto sort
+        public ControledHashSet Paintables
+        {
+            get => _Paintables; set//TODO:Should auto sort
             {
                 _Paintables = value;
                 RegenFocusObj();
-            } }
+            }
+        }
         public Focus FocusObj;
         private IPaintable _FocusedElement;
-        public Diagram Diagram { get; set; }
-        public IPaintable FocusedElement { get => _FocusedElement; private set
+        public IPaintable FocusedElement
+        {
+            get => _FocusedElement; private set
             {
                 var lostFocus = _FocusedElement;// Can't raise before the focus is actually lost
                 _FocusedElement = value;
                 lostFocus?.RaiseFocusLost(new EventArgs());
                 _FocusedElement.RaiseFocusGained(new EventArgs());
                 FocusChanged?.Invoke(this, new PaintableEventArgs(_FocusedElement));
-            } }
+            }
+        }
         private IPaintable FocusForcedAwayFrom = null;
 
         public void AddPaintabe(IPaintable paintable)
@@ -74,7 +85,7 @@ namespace UMLer.Controls
 
         private void ChangeFocus(IPaintable paintable)
         {
-            if(paintable is ISubordinate && ((ISubordinate)paintable).ParentPaintable != null)
+            if (paintable is ISubordinate && ((ISubordinate)paintable).ParentPaintable != null)
             {
                 FocusObj.FocusAround = ((ISubordinate)paintable).ParentPaintable;
             }
@@ -117,8 +128,9 @@ namespace UMLer.Controls
                 return;
             }
 
-            if(paintable != null)
+            if (paintable != null)
             {
+
                 Diagram.SelectedTool.ClickedOnPaintable(args, paintable);
             }
             else
@@ -130,6 +142,7 @@ namespace UMLer.Controls
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
+            this.Focus();
             IPaintable paintableClicked = null;
             foreach (var paintable in Paintables.OrderByDescending(r => r.ZIndex))
             {
@@ -177,7 +190,7 @@ namespace UMLer.Controls
             return bitmap;
         }
 
-        
+
 
         protected override void OnMouseMove(MouseEventArgs e)
         {

@@ -53,6 +53,11 @@ namespace UMLer.DiagramData
             public string Type { get; set; }
             public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
 
+            public static Field CreateEmpty()
+            {
+                return new Field();
+            }
+
             public string ToSyntax()
             {
                 return AccessModifier.ToString().ToLower() + ExtraModsToString(ExtraModifiers) + " "+Type+" " + Name;
@@ -67,6 +72,11 @@ namespace UMLer.DiagramData
             public string ReturnType { get; set; }
             public List<Field> Parameters { get; set; } = new List<Field>();
             public List<ExtraModifier> ExtraModifiers { get; set; } = new List<ExtraModifier>();
+
+            public static Method CreateEmpty()
+            {
+                return new Method();
+            }
 
             public string ParametersToSyntax()
             {

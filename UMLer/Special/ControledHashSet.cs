@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;   
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,8 @@ namespace UMLer.Special
     public class ControledHashSet : ICollection<IPaintable>, IEnumerable<IPaintable>, IEnumerable, ISerializable, IDeserializationCallback, ISet<IPaintable>, IReadOnlyCollection<IPaintable>
     {
         private HashSet<IPaintable> hashSet;
+
+        public Diagram Diagram { get; set; }
 
         //
         // Summary:
@@ -132,11 +134,16 @@ namespace UMLer.Special
         //     Removes all elements from a System.Collections.Generic.HashSet`1 object.
         public void Clear()
         {
-            foreach (var item in hashSet)
+            lock (hashSet)
             {
-                item.OnDeleted();
+                foreach (var item in hashSet.ToList())
+                {
+                    if(item != null)
+                        item.OnDeleted();
+                }
             }
             hashSet.Clear();
+            Diagram.ElementPanel.Refresh();
         }
         //
         // Summary:
@@ -439,8 +446,12 @@ namespace UMLer.Special
                 ((ISubordinate)item).DeleteRequested();
             }
             else
-            { 
+            {
                 item?.OnDeleted();
+            }
+            if (item != null && item.IsFocused())
+            {
+                item.Parent.ForceFocusAround(null);
             }
             return hashSet.Remove(item);
         }
@@ -453,6 +464,10 @@ namespace UMLer.Special
         /// <returns>true if successful false otherwise</returns>
         public bool SilentRemove(IPaintable item)
         {
+            if (item != null && item.IsFocused())
+            {
+                item.Parent.ForceFocusAround(null);
+            }
             return hashSet.Remove(item);
         }
 
@@ -499,6 +514,10 @@ namespace UMLer.Special
                     else
                     {
                         item.OnDeleted();
+                    }
+                    if (item != null && item.IsFocused())
+                    {
+                        item.Parent.ForceFocusAround(null);
                     }
                 }
                 

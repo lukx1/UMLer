@@ -98,8 +98,6 @@ namespace UMLer.Paintables
 
         public bool IsFocused() => Parent != null && this == Parent.FocusedElement;
 
-
-
         protected virtual void RaisePropertyChanged(string propName,bool invalidate = true)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -205,6 +203,11 @@ namespace UMLer.Paintables
         public virtual void OnDeleted()
         {
             
+        }
+
+        public virtual object SafeDeepClone()
+        {
+            return null;
         }
     }
 }

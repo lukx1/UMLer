@@ -112,6 +112,46 @@ namespace UMLer
             return ElementPanel.Paintables.OfType<ILink>().Where(r => r is IPaintable);
         }
 
+        public IEnumerable<string> GetAllClazzNames()
+        {
+            return ElementPanel.Paintables.OfType<DiagramClass>().Select(r => r.RepresentingClass.Name);
+        }
+
+        public void RemoveWithAsocSilent(IPaintable paintable)
+        {
+            var linksToDelete = GetAllLinks().Where(
+                r => r.Start == paintable || r.Finish == paintable
+                ).ToList();
+            foreach (var link in linksToDelete)
+            {
+                ElementPanel.Paintables.SilentRemove((IPaintable)link);
+            }
+            ElementPanel.Paintables.SilentRemove(paintable);
+            ElementPanel.Refresh();
+        }
+
+        public delegate void LinkCreatedHandler(object sender,ILink link);
+
+        public event LinkCreatedHandler LinkCreated;
+
+        public void RaiseLinkCreated(object sender, ILink link)
+        {
+            LinkCreated?.Invoke(sender, link);
+        }
+
+        public void RemoveWithAsoc(IPaintable paintable)
+        {
+            var linksToDelete = GetAllLinks().Where(
+                r => r.Start == paintable || r.Finish == paintable
+                ).ToList();
+            foreach (var link in linksToDelete)
+            {
+                ElementPanel.Paintables.Remove((IPaintable)link);
+            }
+            ElementPanel.Paintables.Remove(paintable);
+            ElementPanel.Refresh();
+        }
+
         public List<ClazzLink> PullAllClazzLinks()
         {
             var validLinks = new List<ClazzLink>();
@@ -122,8 +162,8 @@ namespace UMLer
                     continue;
                 validLinks.Add(new ClazzLink()
                 {
-                    Start = ((IClassing)link.Start).RepresentingClass,
-                    Finish = ((IClassing)link.Finish).RepresentingClass,
+                    Start = (Clazz)((IClassing)link.Start).RepresentingClass,
+                    Finish = (Clazz)((IClassing)link.Finish).RepresentingClass,
                     LinkStart = link.LinkTypeStart,
                     LinkFinish = link.LinkTypeFinish
                 });

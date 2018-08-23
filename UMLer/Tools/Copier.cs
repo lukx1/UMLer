@@ -20,7 +20,14 @@ namespace UMLer.Tools
             base.ClickedOnPaintable(args, nullablePaintable);
             if(Diagram != null && nullablePaintable != null)
             {
-                Diagram.ClipBoard = nullablePaintable;
+                if (nullablePaintable is ISubordinate)
+                {
+                    Diagram.ClipBoard = ((ISubordinate)nullablePaintable).ParentPaintable;
+                }
+                else
+                {
+                    Diagram.ClipBoard = nullablePaintable;
+                }
             }
         }
     }
